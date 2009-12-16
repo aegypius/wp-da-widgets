@@ -4,23 +4,17 @@ Plugin Name: deviantART widgets
 Plugin URI: http://www.aegypius.com/
 Description: This is a plugin which provide a widget to parse/display deviantART feeds
 Author: Nicolas "aegypius" LAURENT
-Version: 2.8.4
+Version: 2.8.6
 Author URI: http://www.aegypius.com
 */
 
-/*
-	Get latest log entries
-
-	url : http://backend.deviantart.com/rss.xml?q=by%3A<username>&type=journal&formatted=1
-*/
-
+require_once realpath(dirname(__FILE__)).'/includes/compat.php';
 require_once realpath(dirname(__FILE__)).'/libraries/DeviantArt/Log.php';
 require_once realpath(dirname(__FILE__)).'/libraries/DeviantArt/Gallery.php';
 require_once realpath(dirname(__FILE__)).'/libraries/DeviantArt/Favourite.php';
 
-
 class DA_Widget extends WP_Widget {
-
+	const VERSION				= '2.8.6';
 	const DA_WIDGET_LOG			= 1;
 	const DA_WIDGET_GALLERY		= 2;
 	const DA_WIDGET_FAVOURITE	= 3;
@@ -99,9 +93,8 @@ class DA_Widget extends WP_Widget {
 		return false;
 	}
 
-
 }
 
-add_action('widgets_init', create_function('', 'return register_widget("DA_Widget");'));
-
+add_action('widgets_init',			create_function('', 'return register_widget("DA_Widget");'));
+require_once realpath(dirname(__FILE__)).'/admin/admin.php';
 ?>
