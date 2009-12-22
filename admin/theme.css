@@ -2,3 +2,8 @@
 #da-widgets-version {font-style:italic;margin-top:0}
 #da-widgets-settings div.postbox h3 {cursor:default;}
 #da-widgets-settings span.global-settings {background-image:url(theme/wrench.png);background-repeat:no-repeat;padding:1px 0px 1px 20px;}
+#da-widgets-settings fieldset dl, #da-widgets-settings fieldset p {padding-left:15px}
+#da-widgets-settings fieldset dt, #da-widgets-settings fieldset dd {line-height:24px;}
+#da-widgets-settings fieldset dt {min-width: 400px;float: left; clear:both;margin-right: 3px;}
+#da-widgets-settings input.button-primary {margin: 10px 0 0 418px;}
+#da-widgets-settings fieldset label.disabled {color: #CCC};
