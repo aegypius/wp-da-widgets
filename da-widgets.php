@@ -4,7 +4,7 @@ Plugin Name: deviantART widgets
 Plugin URI: http://www.aegypius.com/
 Description: This is a plugin which provide a widget to parse/display deviantART feeds
 Author: Nicolas "aegypius" LAURENT
-Version: 2.8.6
+Version: 0.1
 Author URI: http://www.aegypius.com
 */
 
@@ -14,7 +14,7 @@ require_once realpath(dirname(__FILE__)).'/libraries/DeviantArt/Gallery.php';
 require_once realpath(dirname(__FILE__)).'/libraries/DeviantArt/Favourite.php';
 
 class DA_Widget extends WP_Widget {
-	const VERSION				= '2.8.6';
+	const VERSION				= '0.1';
 	const DA_WIDGET_LOG			= 1;
 	const DA_WIDGET_GALLERY		= 2;
 	const DA_WIDGET_FAVOURITE	= 3;
