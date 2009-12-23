@@ -11,7 +11,7 @@ Displays deviantArt feeds as wordpress widgets
 == Screenshots ==
 == Installation ==
 
-Installing da-widgets should take fewer than 3 minutes 
+Installing da-widgets should take fewer than 3 minutes
 
 1. Upload da-widgets directory to `/wp-content/plugins/`
 2. Activate the plugin through the 'Plugins' menu in Wordpress
@@ -20,3 +20,9 @@ Installing da-widgets should take fewer than 3 minutes
 == Frequently Asked Questions ==
 
 == Changes ==
+
+= 0.1 =
+* Initial release
+* Cache support (default: wp-content/cache)
+* Thumbnails generation support (default: 80x80/png)
+* Supports deviantArt Journals, Galleries and Favourites
