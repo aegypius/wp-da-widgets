@@ -10,7 +10,7 @@ if (!defined('DA_WIDGETS_ADMIN_PAGE'))
 function da_widgets_action_links($links, $file) {
 	
 	if('da-widgets/da-widgets.php' == $file && function_exists("admin_url")) {
-		$settings_link = '<a href="' . admin_url('options-general.php?page=' . DA_WIDGETS_ADMIN_PAGE) . '">' . __('Settings') . '</a>';
+		$settings_link = '<a href="' . admin_url('plugins.php?page=' . DA_WIDGETS_ADMIN_PAGE) . '">' . __('Settings') . '</a>';
 		array_unshift($links, $settings_link); // before other links
 	}
 	return $links;
@@ -40,16 +40,21 @@ function da_widgets_admin_settings() {
 	register_setting('da-widgets-settings', 'cache-enabled');
 	register_setting('da-widgets-settings', 'cache-path');
 	register_setting('da-widgets-settings', 'cache-duration');
+
 	// Register Thumbs Settings
 	register_setting('da-widgets-settings', 'thumb-enabled', 'intval');
+	register_setting('da-widgets-settings', 'thumb-path');
 	register_setting('da-widgets-settings', 'thumb-size-x', 'intval');
 	register_setting('da-widgets-settings', 'thumb-size-y', 'intval');
+	register_setting('da-widgets-settings', 'thumb-format');
 }
 
 function da_widgets_admin_page() {
 	// Validating options
 	if (get_option('cache-path') && !is_writeable(realpath(ABSPATH . get_option('cache-path'))))
 		$cache_path_error = sprintf(__('Sorry "%s" is not writeable'), get_option('cache-path'));
+	if (get_option('thumb-path') && !is_writeable(realpath(ABSPATH . get_option('thumb-path'))))
+		$thumb_path_error = sprintf(__('Sorry "%s" is not writeable'), get_option('thumb-path'));
 ?>
 <div id="da-widgets-settings" class="wrap">
 	<div id="da-widgets-settings-icon" class="icon32"><br /></div>
@@ -93,11 +98,29 @@ function da_widgets_admin_page() {
 			<dl>
 				<dt><label for="thumb-enabled"><?php echo __('Thumbnail generation') ?></label></dt>
 				<dd><input <?php echo get_option('thumb-enabled') ? 'checked="checked"' : '' ?> type="checkbox" id="thumb-enabled" name="thumb-enabled" value="1"/></dd>
+
+				<dt><label <?php echo !get_option('thumb-enabled') ? 'class="disabled"' : '' ?> for="thumb-path"><?php echo __('Thumbnail directory') ?></label></dt>
+				<dd>
+					<input <?php echo !get_option('thumb-enabled') ? 'disabled="disabled"' : '' ?> type="text" id="thumb-path" name="thumb-path" value="<?php echo get_option('thumb-path')?>"/>
+					<?php if ($thumb_path_error): ?>
+					<span class="message error"><?php echo $thumb_path_error ?></span>
+					<?php endif; ?>
+				</dd>
+
 				<dt><label <?php echo !get_option('thumb-enabled') ? 'class="disabled"' : '' ?> for="thumb-size-x"><?php echo __('Thumbnail size')?></label></dt>
 				<dd>
 					<input <?php echo !get_option('thumb-enabled') ? 'disabled="disabled"' : '' ?> id="thumb-size-x" name="thumb-size-x" type="text" size="3" maxlength="3" value="<?php echo get_option('thumb-size-x')?>" />
 					x
 					<input <?php echo !get_option('thumb-enabled') ? 'disabled="disabled"' : '' ?> id="thumb-size-y" name="thumb-size-y" type="text" size="3" maxlength="3" value="<?php echo get_option('thumb-size-y')?>" />
+				</dd>
+
+				<dt><label <?php echo !get_option('thumb-enabled') ? 'class="disabled"' : '' ?> for="thumb-format"><?php _e('Thumbnail format') ?></label></dt>
+				<dd>
+					<select <?php echo !get_option('thumb-enabled') ? 'disabled="disabled"' : '' ?> id="thumb-format" name="thumb-format">
+						<option <?php echo selected(get_option('thumb-format'), IMG_PNG)?> value="<?php echo IMG_PNG?>">PNG (default)</option>
+						<option <?php echo selected(get_option('thumb-format'), IMG_JPG)?> value="<?php echo IMG_JPG?>">JPEG</option>
+						<option <?php echo selected(get_option('thumb-format'), IMG_GIF)?> value="<?php echo IMG_GIF?>">GIF</option>
+					</select>
 				</dd>
 			</dl>
 		</fieldset>

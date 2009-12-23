@@ -12,7 +12,7 @@ jQuery(document).ready(function() {
 	});
 	jQuery('#thumb-enabled').click(function() {
 		var enabled = this.checked;
-		jQuery.each(['thumb-size-x', 'thumb-size-y'], function(k, v) {
+		jQuery.each(['thumb-path', 'thumb-size-x', 'thumb-size-y', 'thumb-format'], function(k, v) {
 			if (enabled) {
 				jQuery('label[for=' + v + ']').removeClass('disabled');
 			} else {
