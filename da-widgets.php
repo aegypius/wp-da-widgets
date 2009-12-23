@@ -108,6 +108,7 @@ if (class_exists('WP_Widget')) {
 div.widgetcontent ul.da-widgets.favourite { list-style: none; margin: 0; text-align: center;}
 div.widgetcontent ul.da-widgets.favourite li { display: inline; }
 div.widgetcontent ul.da-widgets.favourite a { display: inline-block; padding: 5px 5px; }
+div.widgetcontent ul.da-widgets.favourite a { display: inline-block; padding: 3px 3px; margin: 2px 2px;border: 1px solid #CCC; }
 </style>
 <?php
 		}
@@ -126,7 +127,7 @@ div.widgetcontent ul.da-widgets.favourite a { display: inline-block; padding: 5p
 				echo $before_title . $title . $after_title;
 
 				if (get_option('cache-enabled')) {
-					$fragment = rtrim(get_option('cache-path'), '/') . DIRECTORY_SEPARATOR . 'da-widgets-' . sha1(serialize($instance));
+					$fragment = rtrim(get_option('cache-path'), '/') . DIRECTORY_SEPARATOR . 'da-widgets-' . sha1(serialize($instance)) . '.html.gz';
 					$duration = sprintf('+%d minutes', get_option('cache-duration'));
 					$cache = new Cache($fragment, $duration);
 				}
@@ -149,9 +150,16 @@ div.widgetcontent ul.da-widgets.favourite a { display: inline-block; padding: 5p
 
 								// Creating Thumbnail cache
 								if (preg_match_all('/\t?\ssrc="([^"]*\.(?:jpg|gif|png))"/x', $body, $m)) {
+									
+									switch (get_option('thumb-format')) {
+										case IMG_PNG: $ext = 'png'; break;
+										case IMG_GIF: $ext = 'gif'; break;
+										case IMG_JPG: $ext = 'jpg'; break;
+									}
 
 									foreach ($m[1] as $picture) {
-										$thumbfile = get_option('thumb-path') . DIRECTORY_SEPARATOR . 'da-widgets-' . sha1($picture);
+
+										$thumbfile = get_option('thumb-path') . DIRECTORY_SEPARATOR . 'da-widgets-' . sha1($picture) . '.' . $ext;
 
 										// TODO : Update this old image library
 										if (!file_exists($thumbfile)) {
