@@ -17,13 +17,13 @@ if (class_exists('WP_Widget')) {
 	require_once realpath(dirname(__FILE__)).'/libraries/DeviantArt/Gallery.php';
 	require_once realpath(dirname(__FILE__)).'/libraries/DeviantArt/Favourite.php';
 
-	class DA_Widget extends WP_Widget {
+	class DA_Widgets extends WP_Widget {
 		const VERSION				= '0.1';
 		const DA_WIDGET_LOG			= 1;
 		const DA_WIDGET_GALLERY		= 2;
 		const DA_WIDGET_FAVOURITE	= 3;
 		
-		function DA_Widget() {
+		function DA_Widgets() {
 			parent::WP_Widget(
 				'da-widget',
 				'deviantART',
@@ -203,8 +203,8 @@ div.widgetcontent ul.da-widgets.favourite a { display: inline-block; padding: 3p
 		}
 	}
 
-	add_action('widgets_init',			create_function('', 'return register_widget("DA_Widget");'));
-	add_action('wp_head',				array('DA_Widget', 'css'));
+	add_action('widgets_init',			create_function('', 'return register_widget("DA_Widgets");'));
+	add_action('wp_head',				array('DA_Widgets', 'css'));
 	require_once realpath(dirname(__FILE__)).'/admin/admin.php';
 }
 ?>
