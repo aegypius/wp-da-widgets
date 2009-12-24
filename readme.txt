@@ -8,7 +8,12 @@ Stable tag: 0.1
 Displays deviantArt feeds as wordpress widgets
 
 == Description ==
+
+This plugins allows display of deviantArt's feeds such as Journals, Favourites and Galleries
+into widgets. Cache support and thumbnail génération is supported.
+
 == Screenshots ==
+
 == Installation ==
 
 Installing da-widgets should take fewer than 3 minutes
@@ -17,9 +22,13 @@ Installing da-widgets should take fewer than 3 minutes
 2. Activate the plugin through the 'Plugins' menu in Wordpress
 3. Go to 'Widgets' menu in Wordpress and place in a widget placeholder
 
+== Upgrade Notice ==
+
+Nothing special.
+
 == Frequently Asked Questions ==
 
-== Changes ==
+== Changelog ==
 
 = 0.1 =
 * Initial release
