@@ -22,7 +22,7 @@ if (class_exists('WP_Widget')) {
 		const DA_WIDGET_LOG			= 1;
 		const DA_WIDGET_GALLERY		= 2;
 		const DA_WIDGET_FAVOURITE	= 3;
-		
+
 		function DA_Widgets() {
 			parent::WP_Widget(
 				'da-widget',
@@ -150,7 +150,7 @@ div.widgetcontent ul.da-widgets.favourite a { display: inline-block; padding: 3p
 
 								// Creating Thumbnail cache
 								if (preg_match_all('/\t?\ssrc="([^"]*\.(?:jpg|gif|png))"/x', $body, $m)) {
-									
+
 									switch (get_option('thumb-format')) {
 										case IMG_PNG: $ext = 'png'; break;
 										case IMG_GIF: $ext = 'gif'; break;
