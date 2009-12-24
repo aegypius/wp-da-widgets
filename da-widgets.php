@@ -182,7 +182,7 @@ div.widgetcontent ul.da-widgets.favourite a { display: inline-block; padding: 3p
 											);
 										}
 
-										$body = str_replace($picture, $thumbfile, $body);
+										$body = str_replace($picture, '/'. $thumbfile, $body);
 									}
 								}
 							}
