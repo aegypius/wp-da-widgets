@@ -38,29 +38,26 @@ function da_widgets_admin_menu() {
 function da_widgets_admin_settings() {
 	// Register Cache Settings
 	register_setting('da-widgets-settings', 'cache-enabled');
-	register_setting('da-widgets-settings', 'cache-path');
 	register_setting('da-widgets-settings', 'cache-duration');
 
 	// Register Thumbs Settings
 	register_setting('da-widgets-settings', 'thumb-enabled', 'intval');
-	register_setting('da-widgets-settings', 'thumb-path');
 	register_setting('da-widgets-settings', 'thumb-size-x', 'intval');
 	register_setting('da-widgets-settings', 'thumb-size-y', 'intval');
 	register_setting('da-widgets-settings', 'thumb-format');
 }
 
 function da_widgets_admin_page() {
-	// Validating options
-	if (get_option('cache-path') && !is_writeable(realpath(ABSPATH . get_option('cache-path'))))
-		$cache_path_error = sprintf(__('Sorry "%s" is not writeable'), get_option('cache-path'));
-	if (get_option('thumb-path') && !is_writeable(realpath(ABSPATH . get_option('thumb-path'))))
-		$thumb_path_error = sprintf(__('Sorry "%s" is not writeable'), get_option('thumb-path'));
 ?>
 <div id="da-widgets-settings" class="wrap">
 	<div id="da-widgets-settings-icon" class="icon32"><br /></div>
 	<h2><?php echo __('deviantArt Widgets Settings', 'da-widgets') ?></h2>
 	<p id="da-widgets-version"> version <?php echo DA_Widgets::VERSION ?></p>
 
+<?php 
+	if (!is_writeable(realpath(ABSPATH . 'wp-content/cache')))
+		printf('<div class="error">' . __('Sorry "%s" is not writeable') . '</div>', ABSPATH . 'wp-content/cache');
+?>
 	<form action="options.php" method="post">
 		<?php wp_nonce_field('update-options'); ?>
 		<?php settings_fields('da-widgets-settings'); ?>
@@ -70,15 +67,6 @@ function da_widgets_admin_page() {
 			<dl>
 				<dt><label for="cache-enabled"><?php echo __('Enable cache') ?></label></dt>
 				<dd><input <?php echo get_option('cache-enabled') ? 'checked="checked"' : '' ?> type="checkbox" id="cache-enabled" name="cache-enabled" value="1"/></dd>
-
-				<dt><label <?php echo !get_option('cache-enabled') ? 'class="disabled"' : '' ?> for="cache-path"><?php echo __('Cache directory') ?></label></dt>
-				<dd>
-					<input <?php echo !get_option('cache-enabled') ? 'disabled="disabled"' : '' ?> type="text" id="cache-path" name="cache-path" value="<?php echo get_option('cache-path')?>"/>
-					<?php if ($cache_path_error): ?>
-					<span class="message error"><?php echo $cache_path_error ?></span>
-					<?php endif; ?>
-				</dd>
-
 				<dt><label <?php echo !get_option('cache-enabled') ? 'class="disabled"' : '' ?> for="cache-duration"><?php echo __('Cache duration') ?></label></dt>
 				<dd>
 					<select <?php echo !get_option('cache-enabled') ? 'disabled="disabled"' : '' ?> id="cache-duration" name="cache-duration">
@@ -98,14 +86,6 @@ function da_widgets_admin_page() {
 			<dl>
 				<dt><label for="thumb-enabled"><?php echo __('Thumbnail generation') ?></label></dt>
 				<dd><input <?php echo get_option('thumb-enabled') ? 'checked="checked"' : '' ?> type="checkbox" id="thumb-enabled" name="thumb-enabled" value="1"/></dd>
-
-				<dt><label <?php echo !get_option('thumb-enabled') ? 'class="disabled"' : '' ?> for="thumb-path"><?php echo __('Thumbnail directory') ?></label></dt>
-				<dd>
-					<input <?php echo !get_option('thumb-enabled') ? 'disabled="disabled"' : '' ?> type="text" id="thumb-path" name="thumb-path" value="<?php echo get_option('thumb-path')?>"/>
-					<?php if ($thumb_path_error): ?>
-					<span class="message error"><?php echo $thumb_path_error ?></span>
-					<?php endif; ?>
-				</dd>
 
 				<dt><label <?php echo !get_option('thumb-enabled') ? 'class="disabled"' : '' ?> for="thumb-size-x"><?php echo __('Thumbnail size')?></label></dt>
 				<dd>

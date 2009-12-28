@@ -127,7 +127,7 @@ div.widgetcontent ul.da-widgets.favourite a { display: inline-block; padding: 3p
 				echo $before_title . $title . $after_title;
 
 				if (get_option('cache-enabled')) {
-					$fragment = rtrim(get_option('cache-path'), '/') . DIRECTORY_SEPARATOR . 'da-widgets-' . sha1(serialize($instance)) . '.html.gz';
+					$fragment = ABSPATH . 'wp-content/cache' . DIRECTORY_SEPARATOR . 'da-widgets-' . sha1(serialize($instance)) . '.html.gz';
 					$duration = sprintf('+%d minutes', get_option('cache-duration'));
 					$cache = new Cache($fragment, $duration);
 				}
@@ -159,7 +159,7 @@ div.widgetcontent ul.da-widgets.favourite a { display: inline-block; padding: 3p
 
 									foreach ($m[1] as $picture) {
 
-										$thumbfile = get_option('thumb-path') . DIRECTORY_SEPARATOR . 'da-widgets-' . sha1($picture) . '.' . $ext;
+										$thumbfile = ABSPATH . 'wp-content/cache' . DIRECTORY_SEPARATOR . 'da-widgets-' . sha1($picture) . '.' . $ext;
 
 										// TODO : Update this old image library
 										if (!file_exists($thumbfile)) {
@@ -182,7 +182,11 @@ div.widgetcontent ul.da-widgets.favourite a { display: inline-block; padding: 3p
 											);
 										}
 
-										$body = str_replace($picture, '/'. $thumbfile, $body);
+										$body = str_replace(
+											$picture
+											, get_bloginfo('wpurl') . str_replace(ABSPATH, '/', $thumbfile)
+											, $body
+										);
 									}
 								}
 							}
