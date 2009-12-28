@@ -11,6 +11,9 @@ class Cache {
 	}
 
 	public function start() {
+		if (!is_writeable(dirname($this->fragment)))
+			return true;
+
 		if ($this->ttl != -1 && file_exists($this->fragment) && (strtotime($this->ttl , filemtime($this->fragment)) >= time())) {
 			$fp = gzopen($this->fragment, 'r');
 			while (!feof($fp))
@@ -18,15 +21,18 @@ class Cache {
 			gzclose($fp);
 			return false;
 		}
+
 		ob_start();
 		return true;
 	}
 
 	public function end() {
-		$src = ob_get_clean();
-		$fp = gzopen($this->fragment, 'w9');
-		gzwrite($fp, $src, strlen($src));
-		gzclose($fp);
+		if (is_writeable(dirname($this->fragment))) {
+			$src = ob_get_clean();
+			$fp = gzopen($this->fragment, 'w9');
+			gzwrite($fp, $src, strlen($src));
+			gzclose($fp);
+		}
 		echo $src;
 	}
 
