@@ -3,13 +3,15 @@ Contributors: aegypius
 Tags: widgets
 Requires at least: 2.8.0
 Tested up to: 2.9
-Stable tag: 0.1
+Stable tag: 0.1.1
 
 Displays deviantArt feeds as wordpress widgets
 
 == Description ==
 
 This plugins allows display of deviantArt's feeds such as Journals, Favourites and Galleries into widgets. Cache support and thumbnail generation is supported.
+
+This plugin is actually in 'Beta', many changes can occure during the next releases.
 
 == Screenshots ==
 
@@ -28,6 +30,10 @@ Nothing special.
 == Frequently Asked Questions ==
 
 == Changelog ==
+
+= 0.1.1 =
+* Removes useless settings
+* Fix url to thumbnails to uses Wordpress url instead of absolute one
 
 = 0.1 =
 * Initial release
