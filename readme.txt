@@ -1,9 +1,10 @@
 === deviantArt Widgets ===
 Contributors: aegypius
-Tags: widgets
+Tags: widget, gallery, image
+Donate link: http://github.com/aegypius/wp-da-widgets
 Requires at least: 2.8.0
 Tested up to: 2.9
-Stable tag: 0.1.1
+Stable tag: 0.1.2
 
 Displays deviantArt feeds as wordpress widgets
 
@@ -30,6 +31,10 @@ Nothing special.
 == Frequently Asked Questions ==
 
 == Changelog ==
+
+= 0.1.2 =
+* Changing readme.txt tags
+* Fixing cache issues when wp-content/cache is not writeable.
 
 = 0.1.1 =
 * Removes useless settings
