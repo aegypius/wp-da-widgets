@@ -127,9 +127,9 @@ div.widgetcontent ul.da-widgets.favourite a { display: inline-block; padding: 3p
 				echo $before_title . $title . $after_title;
 
 				if (get_option('cache-enabled')) {
-					$fragment = ABSPATH . 'wp-content/cache' . DIRECTORY_SEPARATOR . 'da-widgets-' . sha1(serialize($instance)) . '.html.gz';
+					$fragment = 'wp-content/cache' . DIRECTORY_SEPARATOR . 'da-widgets-' . sha1(serialize($instance)) . '.html.gz';
 					$duration = sprintf('+%d minutes', get_option('cache-duration'));
-					$cache = new Cache($fragment, $duration);
+					$cache = new Cache(ABSPATH . $fragment, $duration);
 				}
 
 				if (!$cache || $cache->start()) {
@@ -159,15 +159,16 @@ div.widgetcontent ul.da-widgets.favourite a { display: inline-block; padding: 3p
 
 									foreach ($m[1] as $picture) {
 
-										$thumbfile = ABSPATH . 'wp-content/cache' . DIRECTORY_SEPARATOR . 'da-widgets-' . sha1($picture) . '.' . $ext;
+										$thumbfile = 'wp-content/cache' . DIRECTORY_SEPARATOR . 'da-widgets-' . sha1($picture) . '.' . $ext;
 
 										// TODO : Update this old image library
-										if (!file_exists($thumbfile)) {
+										if (!file_exists(ABSPATH . $thumbfile)) {
 											$thumb = Image::CreateFromFile($picture);
 											Image::Resize($thumb
 												, get_option('thumb-size-x') * 2
 												, get_option('thumb-size-y') * 2
 											);
+
 											Image::Crop($thumb
 												, get_option('thumb-size-x')
 												, get_option('thumb-size-y')
@@ -175,18 +176,24 @@ div.widgetcontent ul.da-widgets.favourite a { display: inline-block; padding: 3p
 												, false
 												, IMAGE_ALIGN_CENTER | IMAGE_ALIGN_CENTER
 											);
-											Image::Output($thumb
-												, IMAGE_OUTPUTMODE_FILE
-												, get_option('thumb-format')
-												, $thumbfile
+
+											if (is_writeable(dirname(ABSPATH . $thumbfile))) {
+												Image::Output($thumb
+													, IMAGE_OUTPUTMODE_FILE
+													, get_option('thumb-format')
+													, ABSPATH . $thumbfile
+												);
+											}
+										}
+
+										if (is_file(ABSPATH . $thumbfile)) {
+											$body = str_replace(
+												$picture
+												, get_bloginfo('wpurl') . '/' . $thumbfile
+												, $body
 											);
 										}
 
-										$body = str_replace(
-											$picture
-											, get_bloginfo('wpurl') . str_replace(ABSPATH, '/', $thumbfile)
-											, $body
-										);
 									}
 								}
 							}
