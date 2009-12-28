@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: deviantART widgets
-Plugin URI: http://www.aegypius.com/
+Plugin URI: http://github.com/aegypius/wp-da-widgets
 Description: This is a plugin which provide a widget to parse/display deviantART feeds
 Author: Nicolas "aegypius" LAURENT
 Version: 0.1.1
