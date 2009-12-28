@@ -56,7 +56,7 @@ function da_widgets_admin_page() {
 
 <?php 
 	if (!is_writeable(realpath(ABSPATH . 'wp-content/cache')))
-		printf('<div class="error">' . __('Sorry "%s" is not writeable') . '</div>', ABSPATH . 'wp-content/cache');
+		printf('<div class="error">' . __('Sorry "%s" is not writeable') . '.</div>', 'wp-content/cache');
 ?>
 	<form action="options.php" method="post">
 		<?php wp_nonce_field('update-options'); ?>
