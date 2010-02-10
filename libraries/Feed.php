@@ -23,7 +23,9 @@ class Feed {
 
 		curl_setopt($ch, CURLOPT_HTTPHEADERS,array('Content-Type: text/xml'));
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+
+		if (ini_get('open_basedir') == '' && ini_get('safe_mode' == 'Off'))
+			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 
 		$content = curl_exec($ch);
 
