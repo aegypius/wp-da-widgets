@@ -4,7 +4,7 @@ Tags: widget, gallery, image
 Donate link: http://github.com/aegypius/wp-da-widgets
 Requires at least: 2.8.0
 Tested up to: 2.9
-Stable tag: 0.1.2
+Stable tag: 0.1.3
 
 Displays deviantArt feeds as wordpress widgets
 
@@ -31,6 +31,9 @@ Nothing special.
 == Frequently Asked Questions ==
 
 == Changelog ==
+
+= 0.1.3 =
+* Prevents "litteratures" to show in Favourites and Galleries
 
 = 0.1.2 =
 * Changing readme.txt tags
