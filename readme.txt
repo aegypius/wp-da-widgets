@@ -16,6 +16,8 @@ This plugin is actually in 'Beta', many changes can occure during the next relea
 
 == Screenshots ==
 
+Nothing yet.
+
 == Installation ==
 
 Installing da-widgets should take fewer than 3 minutes
@@ -29,6 +31,8 @@ Installing da-widgets should take fewer than 3 minutes
 Nothing special.
 
 == Frequently Asked Questions ==
+
+Nothing yet.
 
 == Changelog ==
 
