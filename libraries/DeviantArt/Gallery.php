@@ -40,7 +40,7 @@ class DeviantArt_Gallery extends Feed {
 				break;
 		}
 
-		return sprintf('<ul class="da-widgets favourite">%s</ul>', $items);
+		return sprintf('<ul class="da-widgets gallery">%s</ul>', $items);
 	}
 
 	public function __toString() {
