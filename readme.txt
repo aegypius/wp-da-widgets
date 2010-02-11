@@ -32,8 +32,11 @@ Nothing special.
 
 == Changelog ==
 
+= 0.1.4 =
+* Issue #1 : Updating thumbnail generation for Gallery mode
+
 = 0.1.3 =
-* Fix issue #1 : Safe Mode problem
+* Issue #1 : Safe Mode problem
 * Prevents "litteratures" to show in Favourites and Galleries
 
 = 0.1.2 =
