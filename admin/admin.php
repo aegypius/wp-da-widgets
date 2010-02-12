@@ -104,6 +104,10 @@ function da_widgets_admin_check() {
 	if (ini_get('open_basedir') != '')
 		$failure |= 128;
 
+	// Checking SimpleXmlElement (cf issue:#1)
+	if (!class_exists('SimpleXmlElement'))
+		$failure |= 256;
+
 	return $failure;
 }
 
@@ -174,7 +178,8 @@ function da_widgets_admin_page() {
 		 16  => sprintf(__('Wordpress cache directory must be writeable (%s)'), 'wp-content/cache'),
 		 32  => sprintf(__('"%s" function is required for this plugin'), 'sha1'),
 		 64  => sprintf(__('Some issues can occure in safe_mode')),
-		128  => sprintf(__('Some issues can occure when open_basedir is set (%s)'), ini_get('open_basedir'))
+		128  => sprintf(__('Some issues can occure when open_basedir is set (%s)'), ini_get('open_basedir')),
+		256  => sprintf(__('"%s" extension is required for this plugin'), 'SimpleXml')
 	);
 ?>
 	<fieldset>
