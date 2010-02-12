@@ -48,7 +48,7 @@ if (class_exists('WP_Widget')) {
 
 			$title		= esc_attr($instance['title']);
 			$type		= intval($instance['type']);
-			$deviant	= esc_attr($instance['deviant']);
+			$deviant	= trim(esc_attr($instance['deviant']));
 			$items		= intval($instance['items']);
 
 			$html		= intval($instance['html']);
