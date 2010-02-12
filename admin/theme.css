@@ -1,12 +1,16 @@
 #da-widgets-settings-icon {background:transparent url(theme/officialdeviantArtlogo.png) no-repeat scroll 50% 50%;}
 #da-widgets-version {font-style:italic;margin-top:0}
-#da-widgets-settings div.postbox h3 {cursor:default;}
 #da-widgets-settings span.global-settings {background-image:url(theme/wrench.png);background-repeat:no-repeat;padding:1px 0px 1px 20px;}
 #da-widgets-settings fieldset dl, #da-widgets-settings fieldset p {padding-left:15px}
 #da-widgets-settings fieldset dt, #da-widgets-settings fieldset dd {line-height:24px;}
 #da-widgets-settings fieldset dt {min-width: 400px;float: left; clear:both;margin-right: 3px;}
 #da-widgets-settings input.button-primary {margin: 10px 0 0 418px;}
 #da-widgets-settings fieldset label.disabled {color: #CCC}
-#da-widgets-settings li.message {margin: 0 0 2px 0}
-#da-widgets-settings li.message q {font-style: italic}
+#da-widgets-settings legend {display: block; width: 100%; font-size: 1.17em; margin: 1em 0 0 0; font-weight: normal; border-bottom: 1px dotted #CCC;}
+#da-widgets-settings legend + p {margin-top: -1em; font-style: italic;}
+/* --- Message Management --- */
+#da-widgets-settings ul .message {border: 1px solid #8aceff;padding: 3px 15px 5px 27px;margin: 0 0 5px 15px;line-height: 15px;border-radius: 3px;-moz-border-radius: 3px;-webkit-border-radius: 3px;background: #e2f5fe url(theme/accept.png) no-repeat 5px center;}
+#da-widgets-settings ul .message.warning {border-color: #f8c44f;background-color: #fee8b9;background-image: url(theme/error.png);}
+#da-widgets-settings ul .message.error {border-color: #f96764;background-color: #fcb2b5;background-image: url(theme/exclamation.png);}
+#da-widgets-settings ul .message q {font-style: italic}
 

@@ -154,24 +154,24 @@ function da_widgets_admin_page() {
 		 64  => sprintf(_('Some issues can occure in safe_mode')),
 		128  => sprintf(_('Some issues can occure when open_basedir is set (%s)'), ini_get('open_basedir'))
 	);
-	if (true || ($failures = da_widgets_admin_check()) > 0) {
-		$failures = 255;
 ?>
 	<fieldset>
-		<legend>Warnings</legend>
+		<legend>Setup checks</legend>
 		<ul>
 <?php
+
+	if (($failures = da_widgets_admin_check()) > 0) {
 		for( $i = 1; $i <= $failures; $i = $i *2) {
 			if (($failures & $i) != 0) {
 				printf('<li class="message error">%s.</li>', preg_replace('/("([^"]+)")/', '<q>$2</q>', $error_message[$i]));
 			}
 		}
+	} else {
+		printf('<li class="message">%s.</li>', _('Everything is fine'));
+	}
 ?>
 		</ul>
 	</fieldset>
-<?php
-	}
-?>
 </div>
 <?
 }
