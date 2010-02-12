@@ -3,6 +3,7 @@
 add_action('admin_head',			'da_widgets_admin_head');
 add_action('admin_menu',			'da_widgets_admin_menu');
 add_filter('plugin_action_links',	'da_widgets_action_links', 9, 2);
+add_filter('plugin_row_meta', 'da_widgets_admin_meta',10,2);
 
 if (!defined('DA_WIDGETS_ADMIN_PAGE'))
 	define('DA_WIDGETS_ADMIN_PAGE', implode(DIRECTORY_SEPARATOR, array_slice(explode(DIRECTORY_SEPARATOR, __FILE__), -3)));
@@ -12,6 +13,14 @@ function da_widgets_action_links($links, $file) {
 	if('da-widgets/da-widgets.php' == $file && function_exists("admin_url")) {
 		$settings_link = '<a href="' . admin_url('plugins.php?page=' . DA_WIDGETS_ADMIN_PAGE) . '">' . __('Settings') . '</a>';
 		array_unshift($links, $settings_link); // before other links
+	}
+
+	return $links;
+}
+
+function da_widgets_admin_meta($links, $file) {
+	if('da-widgets/da-widgets.php' == $file) {
+		$links[] = '<a href="http://github.com/aegypius/wp-da-widgets/issues" target="_blank">' . __('Support') . '</a>';
 	}
 	return $links;
 }
@@ -34,6 +43,7 @@ function da_widgets_admin_menu() {
 	);
 	add_action('admin_init', 'da_widgets_admin_settings');
 }
+
 
 function da_widgets_admin_settings() {
 	// Register Cache Settings
@@ -194,7 +204,7 @@ function da_widgets_admin_page() {
 			}
 		}
 	} else {
-		printf('<li class="message">%s.</li>', _('Everything is fine'));
+		printf('<li class="message">%s.</li>', __('Everything is fine'));
 	}
 ?>
 		</ul>
