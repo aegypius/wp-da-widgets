@@ -105,10 +105,14 @@ if (class_exists('WP_Widget')) {
 		function css() {
 ?>
 <style type="text/css">
-div.widgetcontent ul.da-widgets.favourite { list-style: none; margin: 0; text-align: center;}
-div.widgetcontent ul.da-widgets.favourite li { display: inline; }
-div.widgetcontent ul.da-widgets.favourite a { display: inline-block; padding: 5px 5px; }
-div.widgetcontent ul.da-widgets.favourite a { display: inline-block; padding: 3px 3px; margin: 2px 2px;border: 1px solid #CCC; }
+ul.da-widgets.favourite,
+ul.da-widgets.gallery      { list-style: none; margin: 0; text-align: center;}
+ul.da-widgets.favourite li,
+ul.da-widgets.gallery li   { display: inline; }
+ul.da-widgets.favourite a,
+ul.da-widgets.gallery a    { display: inline-block; padding: 5px 5px; }
+ul.da-widgets.favourite a,
+ul.da-widgets.gallery a    { display: inline-block; padding: 3px 3px; margin: 2px 2px;border: 1px solid #CCC; }
 </style>
 <?php
 		}
@@ -145,59 +149,59 @@ div.widgetcontent ul.da-widgets.favourite a { display: inline-block; padding: 3p
 						case self::DA_WIDGET_FAVOURITE:
 							$feed = new DeviantArt_Favourite($deviant, $rating);
 							$body = $feed->get($items);
+							break;
+					}
 
-							if (get_option('thumb-enabled')) {
+					if (in_array($type, array(self::DA_WIDGET_GALLERY, self::DA_WIDGET_FAVOURITE)) && get_option('thumb-enabled')) {
 
-								// Creating Thumbnail cache
-								if (preg_match_all('/\t?\ssrc="([^"]*\.(?:jpg|gif|png))"/x', $body, $m)) {
+						// Creating Thumbnail cache
+						if (preg_match_all('/\t?\ssrc="([^"]*\.(?:jpg|gif|png))"/x', $body, $m)) {
 
-									switch (get_option('thumb-format')) {
-										case IMG_PNG: $ext = 'png'; break;
-										case IMG_GIF: $ext = 'gif'; break;
-										case IMG_JPG: $ext = 'jpg'; break;
-									}
+							switch (get_option('thumb-format')) {
+								case IMG_PNG: $ext = 'png'; break;
+								case IMG_GIF: $ext = 'gif'; break;
+								case IMG_JPG: $ext = 'jpg'; break;
+							}
 
-									foreach ($m[1] as $picture) {
+							foreach ($m[1] as $picture) {
 
-										$thumbfile = 'wp-content/cache' . DIRECTORY_SEPARATOR . 'da-widgets-' . sha1($picture) . '.' . $ext;
+								$thumbfile = 'wp-content/cache' . DIRECTORY_SEPARATOR . 'da-widgets-' . sha1($picture) . '.' . $ext;
 
-										// TODO : Update this old image library
-										if (!file_exists(ABSPATH . $thumbfile)) {
-											$thumb = Image::CreateFromFile($picture);
-											Image::Resize($thumb
-												, get_option('thumb-size-x') * 2
-												, get_option('thumb-size-y') * 2
-											);
+								// TODO : Update this old image library
+								if (!file_exists(ABSPATH . $thumbfile)) {
+									$thumb = Image::CreateFromFile($picture);
+									Image::Resize($thumb
+										, get_option('thumb-size-x') * 2
+										, get_option('thumb-size-y') * 2
+									);
 
-											Image::Crop($thumb
-												, get_option('thumb-size-x')
-												, get_option('thumb-size-y')
-												, false
-												, false
-												, IMAGE_ALIGN_CENTER | IMAGE_ALIGN_CENTER
-											);
+									Image::Crop($thumb
+										, get_option('thumb-size-x')
+										, get_option('thumb-size-y')
+										, false
+										, false
+										, IMAGE_ALIGN_CENTER | IMAGE_ALIGN_CENTER
+									);
 
-											if (is_writeable(dirname(ABSPATH . $thumbfile))) {
-												Image::Output($thumb
-													, IMAGE_OUTPUTMODE_FILE
-													, get_option('thumb-format')
-													, ABSPATH . $thumbfile
-												);
-											}
-										}
-
-										if (is_file(ABSPATH . $thumbfile)) {
-											$body = str_replace(
-												$picture
-												, get_bloginfo('wpurl') . '/' . $thumbfile
-												, $body
-											);
-										}
-
+									if (is_writeable(dirname(ABSPATH . $thumbfile))) {
+										Image::Output($thumb
+											, IMAGE_OUTPUTMODE_FILE
+											, get_option('thumb-format')
+											, ABSPATH . $thumbfile
+										);
 									}
 								}
+
+								if (is_file(ABSPATH . $thumbfile)) {
+									$body = str_replace(
+										$picture
+										, get_bloginfo('wpurl') . '/' . $thumbfile
+										, $body
+									);
+								}
+
 							}
-							break;
+						}
 					}
 
 					echo $body;

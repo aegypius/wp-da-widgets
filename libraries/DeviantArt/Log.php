@@ -32,7 +32,7 @@ class DeviantArt_Log extends Feed {
 
 		}
 
-		return sprintf('<dl>%s</dl>', $items);
+		return sprintf('<dl class="da-widgets log">%s</dl>', $items);
 	}
 
 	public function __toString() {
