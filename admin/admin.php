@@ -45,6 +45,20 @@ function da_widgets_admin_settings() {
 	register_setting('da-widgets-settings', 'thumb-size-x', 'intval');
 	register_setting('da-widgets-settings', 'thumb-size-y', 'intval');
 	register_setting('da-widgets-settings', 'thumb-format');
+
+	// Adding Cache cleaning 
+	register_setting('da-widgets-settings', 'empty-cache', 'da_widgets_admin_clean_cache' );
+
+}
+
+function da_widgets_admin_clean_cache($input) {
+	if (!empty($input)) {
+		$dir = new DirectoryIterator(realpath(ABSPATH . 'wp-content/cache'));
+		foreach ($dir as $item) {
+			if ($item->isFile() && strpos($item->getFilename(), 'da-widgets-') !== false)
+				unlink($item->getPathname());
+		}
+	}
 }
 
 // Checks setup requirement
@@ -68,8 +82,15 @@ function da_widgets_admin_check() {
 		$failure |= 8;
 
 	// Checking if cache is writeable
-	if (!is_writeable(realpath(ABSPATH . 'wp-content/cache')))
+	if (!is_writeable(realpath(ABSPATH . 'wp-content/cache'))) {
 		$failure |= 16;
+	} else {
+		$fp = fopen(realpath(ABSPATH . 'wp-content/cache') . DIRECTORY_SEPARATOR . 'da-widgets-write-test', 'w+');
+		if (is_resource($fp) && fputs($fp, 'Writing is OK'))
+			fclose($fp);
+		else
+			$failure |= 16;
+	}
 
 	// Checking SHA1 function
 	if (!function_exists('sha1'))
@@ -141,18 +162,19 @@ function da_widgets_admin_page() {
 		</fieldset>
 
 		<input type="submit" value="<?php echo __('Save')?>" class="button-primary" />
+		<input class="button" type="submit" value="<?php echo __('Empty cache')?>" name="empty-cache" />
 	</form>
 
 <?php 
 	$error_message = array(
-		  1  => sprintf(_('"%s" extension is required for this plugin'), 'GD'),
-		  2  => sprintf(_('"%s" extension is required for this plugin'), 'zlib'),
-		  4  => sprintf(_('"%s" extension is required for this plugin'), 'cURL'),
-		  8  => sprintf(_('PHP %.1f is required for this plugin'), 5.2),
-		 16  => sprintf(_('Wordpress cache directory must be writeable (%s)'), 'wp-content/cache'),
-		 32  => sprintf(_('"%s" function is required for this plugin'), 'sha1'),
-		 64  => sprintf(_('Some issues can occure in safe_mode')),
-		128  => sprintf(_('Some issues can occure when open_basedir is set (%s)'), ini_get('open_basedir'))
+		  1  => sprintf(__('"%s" extension is required for this plugin'), 'GD'),
+		  2  => sprintf(__('"%s" extension is required for this plugin'), 'zlib'),
+		  4  => sprintf(__('"%s" extension is required for this plugin'), 'cURL'),
+		  8  => sprintf(__('PHP %.1f is required for this plugin'), 5.2),
+		 16  => sprintf(__('Wordpress cache directory must be writeable (%s)'), 'wp-content/cache'),
+		 32  => sprintf(__('"%s" function is required for this plugin'), 'sha1'),
+		 64  => sprintf(__('Some issues can occure in safe_mode')),
+		128  => sprintf(__('Some issues can occure when open_basedir is set (%s)'), ini_get('open_basedir'))
 	);
 ?>
 	<fieldset>
