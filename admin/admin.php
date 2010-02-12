@@ -47,6 +47,45 @@ function da_widgets_admin_settings() {
 	register_setting('da-widgets-settings', 'thumb-format');
 }
 
+// Checks setup requirement
+function da_widgets_admin_check() {
+
+	// Checking GD availability
+	if (!function_exists('gd_info'))
+		$failure |= 1;
+
+	// Checking GZip availability
+	if (!function_exists('gzopen'))
+		$failure |= 2;
+
+	// Checking cURL availability
+	if (!function_exists('curl_init'))
+		$failure |= 4;
+
+	// Checking PHP version
+	$v = str_replace('.', '', preg_replace('/([0-9\.]+)(.*)/', '$1', phpversion())) / 100;
+	if ($v < 5.2 && $v >= 5.3)
+		$failure |= 8;
+
+	// Checking if cache is writeable
+	if (!is_writeable(realpath(ABSPATH . 'wp-content/cache')))
+		$failure |= 16;
+
+	// Checking SHA1 function
+	if (!function_exists('sha1'))
+		$failure |= 32;
+
+	// Checking Safe Mode    (cf issue:#1)
+	if (ini_get('safe_mode') == 'On')
+		$failure |= 64;
+
+	// Checking OpenBase Dir (cf issue:#1)
+	if (ini_get('open_basedir') != '')
+		$failure |= 128;
+
+	return $failure;
+}
+
 function da_widgets_admin_page() {
 ?>
 <div id="da-widgets-settings" class="wrap">
@@ -54,10 +93,6 @@ function da_widgets_admin_page() {
 	<h2><?php echo __('deviantArt Widgets Settings', 'da-widgets') ?></h2>
 	<p id="da-widgets-version"> version <?php echo DA_Widgets::VERSION ?></p>
 
-<?php 
-	if (!is_writeable(realpath(ABSPATH . 'wp-content/cache')))
-		printf('<div class="error">' . __('Sorry "%s" is not writeable') . '.</div>', 'wp-content/cache');
-?>
 	<form action="options.php" method="post">
 		<?php wp_nonce_field('update-options'); ?>
 		<?php settings_fields('da-widgets-settings'); ?>
@@ -106,8 +141,37 @@ function da_widgets_admin_page() {
 		</fieldset>
 
 		<input type="submit" value="<?php echo __('Save')?>" class="button-primary" />
-
 	</form>
+
+<?php 
+	$error_message = array(
+		  1  => sprintf(_('"%s" extension is required for this plugin'), 'GD'),
+		  2  => sprintf(_('"%s" extension is required for this plugin'), 'zlib'),
+		  4  => sprintf(_('"%s" extension is required for this plugin'), 'cURL'),
+		  8  => sprintf(_('PHP %.1f is required for this plugin'), 5.2),
+		 16  => sprintf(_('Wordpress cache directory must be writeable (%s)'), 'wp-content/cache'),
+		 32  => sprintf(_('"%s" function is required for this plugin'), 'sha1'),
+		 64  => sprintf(_('Some issues can occure in safe_mode')),
+		128  => sprintf(_('Some issues can occure when open_basedir is set (%s)'), ini_get('open_basedir'))
+	);
+	if (true || ($failures = da_widgets_admin_check()) > 0) {
+		$failures = 255;
+?>
+	<fieldset>
+		<legend>Warnings</legend>
+		<ul>
+<?php
+		for( $i = 1; $i <= $failures; $i = $i *2) {
+			if (($failures & $i) != 0) {
+				printf('<li class="message error">%s.</li>', preg_replace('/("([^"]+)")/', '<q>$2</q>', $error_message[$i]));
+			}
+		}
+?>
+		</ul>
+	</fieldset>
+<?php
+	}
+?>
 </div>
 <?
 }
