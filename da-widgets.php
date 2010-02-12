@@ -18,10 +18,11 @@ if (class_exists('WP_Widget')) {
 	require_once realpath(dirname(__FILE__)).'/libraries/DeviantArt/Favourite.php';
 
 	class DA_Widgets extends WP_Widget {
-		const VERSION				= '0.1.3';
-		const DA_WIDGET_LOG			= 1;
-		const DA_WIDGET_GALLERY		= 2;
-		const DA_WIDGET_FAVOURITE	= 3;
+		const VERSION               = '0.1.3';
+		const DA_WIDGET_LOG         = 1;
+		const DA_WIDGET_GALLERY     = 2;
+		const DA_WIDGET_FAVOURITE   = 3;
+		const MODE_DEBUG            = true;
 
 		function DA_Widgets() {
 			parent::WP_Widget(
@@ -213,7 +214,10 @@ ul.da-widgets.gallery a    { display: inline-block; padding: 3px 3px; margin: 2p
 				echo $after_widget;
 
 			}
-			catch(Exception $ex) {}
+			catch(Exception $ex) {
+				if (self::MODE_DEBUG) 
+					printf ('%s : %s (%s)', get_class($ex), $ex->getMessage(), $ex->getCode());
+			}
 
 		}
 	}
