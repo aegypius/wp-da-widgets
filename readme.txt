@@ -40,7 +40,8 @@ Nothing yet.
 == Changelog ==
 
 = 0.1.4 =
-* Issue #1 : Adding more tests to check that he is usable
+* Issue #1 : Adding an "Empty cache" button to clean the plugin cache
+* Issue #1 : Adding more tests to check if the plugin is usable
 * Issue #1 : Updating thumbnail generation for Gallery mode
 
 = 0.1.3 =
