@@ -16,6 +16,7 @@ This plugin is actually in 'Beta', many changes can occure during the next relea
 
 Testers : 
 * [Honigkuchenwolf](http://hokuwo.de/ "Wolfsgeheul")
+* [Flex](http://www.flex-it.fr/ "Work It Make It Flex It")
 
 == Screenshots ==
 
