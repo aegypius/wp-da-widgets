@@ -37,6 +37,7 @@ Nothing yet.
 == Changelog ==
 
 = 0.1.4 =
+* Issue #1 : Adding more tests to check that he is usable
 * Issue #1 : Updating thumbnail generation for Gallery mode
 
 = 0.1.3 =
