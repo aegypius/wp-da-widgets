@@ -21,7 +21,7 @@ class DeviantArt_Favourite extends Feed {
 
 			$media = $item->children($ns['media']);
 
-			if (!(is_null($this->rating) || $this->rating == 'all') && $media->rating != $this->rating)
+			if (!(empty($this->rating) || $this->rating == 'all') && $media->rating != $this->rating)
 				continue;
 
 			if ($media->text)
