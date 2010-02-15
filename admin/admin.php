@@ -56,7 +56,7 @@ function da_widgets_admin_settings() {
 	register_setting('da-widgets-settings', 'thumb-size-y', 'intval');
 	register_setting('da-widgets-settings', 'thumb-format');
 
-	// Adding Cache cleaning 
+	// Adding Cache cleaning
 	register_setting('da-widgets-settings', 'empty-cache', 'da_widgets_admin_clean_cache' );
 
 }
@@ -183,7 +183,7 @@ function da_widgets_admin_page() {
 		<input class="button" type="submit" value="<?php echo __('Empty cache')?>" name="empty-cache" />
 	</form>
 
-<?php 
+<?php
 	$error_message = array(
 		  1  => sprintf(__('"%s" extension is required for this plugin'), 'GD'),
 		  2  => sprintf(__('"%s" extension is required for this plugin'), 'zlib'),
