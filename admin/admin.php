@@ -118,6 +118,10 @@ function da_widgets_admin_check() {
 	if (!class_exists('SimpleXmlElement'))
 		$failure |= 256;
 
+	// Checking for a method to access remote files
+	if (!ini_get('allow_url_fopen') && !function_exists('curl_init'))
+		$failure |= 512;
+
 	return $failure;
 }
 
@@ -189,7 +193,8 @@ function da_widgets_admin_page() {
 		 32  => sprintf(__('"%s" function is required for this plugin'), 'sha1'),
 		 64  => sprintf(__('Some issues can occure in safe_mode')),
 		128  => sprintf(__('Some issues can occure when open_basedir is set (%s)'), ini_get('open_basedir')),
-		256  => sprintf(__('"%s" extension is required for this plugin'), 'SimpleXml')
+		256  => sprintf(__('"%s" extension is required for this plugin'), 'SimpleXml'),
+		512  => sprintf(__('No suitable method to process remote images for this plugin (allow_url_fopen is disabled, curl is required)'))
 	);
 ?>
 	<fieldset>

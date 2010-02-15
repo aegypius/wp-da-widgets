@@ -158,25 +158,40 @@ class Image
 
 	function CreateFromFile($imgFile)
 	{
-			list($width, $height, $type, $attr) = @getimagesize($imgFile);
-			switch($type)
-			{
-				case 1 :
-					return @ImageCreateFromGIF($imgFile);
-					exit;
-					break;
-				case 2 :
-					return @ImageCreateFromJPEG($imgFile);
-					exit;
-					break;
-				case 3 :
-					return @ImageCreateFromPNG($imgFile);
-					exit;
-					break;
-				default :
-					exit;
+		// Tests for remote access
+		if (preg_match('/^(http|ftp)s?:\/\//', $imgFile)) {
+			if (!ini_get('allow_url_fopen') && !function_exists('curl')) {
+				throw new Exception('Unable to access file without curl or allow_url_fopen in PHP ini.');
+			} else if (!ini_get('allow_url_fopen')) {
+				$ch = curl_init();
+				curl_setopt($ch, CURLOPT_TIMEOUT, 3);
+				curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: text/xml"));
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+				$content = curl_exec($ch);
+				curl_close($ch);
+				return @ImageCreateFromString($content);
 			}
-			return false;
+		}
+
+		list($width, $height, $type, $attr) = @getimagesize($imgFile);
+		switch($type)
+		{
+			case 1 :
+				return @ImageCreateFromGIF($imgFile);
+				exit;
+				break;
+			case 2 :
+				return @ImageCreateFromJPEG($imgFile);
+				exit;
+				break;
+			case 3 :
+				return @ImageCreateFromPNG($imgFile);
+				exit;
+				break;
+			default :
+				exit;
+		}
+		return false;
 	}
 
 	function Process(&$imgResource, $batchArray, $cacheDirectory = IMAGE_CACHE_DIRECTORY)
