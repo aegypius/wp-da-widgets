@@ -17,6 +17,15 @@ if (class_exists('WP_Widget')) {
 	require_once realpath(dirname(__FILE__)).'/libraries/DeviantArt/Gallery.php';
 	require_once realpath(dirname(__FILE__)).'/libraries/DeviantArt/Favourite.php';
 
+	function da_widgets_log($message) {
+		if (!DA_Widgets::MODE_DEBUG)
+			return;
+
+		if (!is_string($message))
+			throw Exception('Log messages must be strings !');
+		error_log( strftime('%Y-%m-%d %H:%M:%S %Z') .' - '. rtrim($message, PHP_EOL) . PHP_EOL, 3, 'wp-content/cache' . DIRECTORY_SEPARATOR . 'da-widgets.log');
+	}
+
 	class DA_Widgets extends WP_Widget {
 		const VERSION               = '0.1.4';
 		const DA_WIDGET_LOG         = 1;
@@ -77,7 +86,7 @@ if (class_exists('WP_Widget')) {
 		<p>
 			<label for="<?php echo $this->get_field_id('items')?>">Items to display : </label>
 			<select class="widefat" id="<?php echo $this->get_field_id('items')?>" name="<?php echo $this->get_field_name('items')?>">
-				<option <?php selected(-1 , $items) ?> value="-1"><?php _e('All')?></option>
+				<option <?php selected(-1 , $items) ?> value="-1"><?php echo __('All')?></option>
 			<?php foreach (range(1,10) as $v) : ?>
 				<option <?php selected($v , $items) ?> value="<?php echo $v?>"><?php echo $v?></option>
 			<?php endforeach; ?>
@@ -121,12 +130,19 @@ ul.da-widgets.gallery a    { display: inline-block; padding: 3px 3px; margin: 2p
 		function widget($args, $instance) {
 			try {
 				extract($args, EXTR_SKIP);
+				da_widgets_log(str_pad(" BEGIN {$widget_id} ", 72, '-', STR_PAD_BOTH));
+				da_widgets_log("DEBUG[{$widget_id}] - Frontend Initalization");
+
 				$title = esc_attr($instance['title']);
 				$type = esc_attr($instance['type']);
 				$deviant = esc_attr($instance['deviant']);
 				$html = intval($instance['html']);
 				$items = intval($instance['items']);
 				$rating = esc_attr($instance['rating']);
+
+				da_widgets_log("DEBUG[{$widget_id}] - Cache is "       . (get_option('cache-enabled') ? 'enabled' : 'disabled') . " (duration : " . get_option('cache-duration') . ")");
+				da_widgets_log("DEBUG[{$widget_id}] - Thumnbails are " . (get_option('thumb-enabled') ? 'enabled' : 'disabled') . ' (size : ' . get_option('thumb-size-x') . 'x'. get_option('thumb-size-y') .')');
+				da_widgets_log("DEBUG[{$widget_id}] - Config : "       . print_r($instance, true));
 
 				echo $before_widget;
 				echo $before_title . $title . $after_title;
@@ -135,9 +151,12 @@ ul.da-widgets.gallery a    { display: inline-block; padding: 3px 3px; margin: 2p
 					$fragment = 'wp-content/cache' . DIRECTORY_SEPARATOR . 'da-widgets-' . sha1(serialize($instance)) . '.html.gz';
 					$duration = sprintf('+%d minutes', get_option('cache-duration'));
 					$cache = new Cache(ABSPATH . $fragment, $duration);
+					da_widgets_log("DEBUG[{$widget_id}] - Cache fragment : "       . $fragment);
 				}
 
 				if (!$cache || $cache->start()) {
+					da_widgets_log("DEBUG[{$widget_id}] - Generating content");
+
 					switch ($type) {
 						case self::DA_WIDGET_LOG:
 							$res = new DeviantArt_Log($deviant, $html);
@@ -148,12 +167,17 @@ ul.da-widgets.gallery a    { display: inline-block; padding: 3px 3px; margin: 2p
 							$body = $res->get($items);
 							break;
 						case self::DA_WIDGET_FAVOURITE:
-							$feed = new DeviantArt_Favourite($deviant, $rating);
-							$body = $feed->get($items);
+							$res = new DeviantArt_Favourite($deviant, $rating);
+							$body = $res->get($items);
 							break;
 					}
 
+					da_widgets_log("DEBUG[{$widget_id}] - Preparing content : {$body}");
+
+
 					if (in_array($type, array(self::DA_WIDGET_GALLERY, self::DA_WIDGET_FAVOURITE)) && get_option('thumb-enabled')) {
+
+						da_widgets_log("DEBUG[{$widget_id}] - Generating thumbnails");
 
 						// Creating Thumbnail cache
 						if (preg_match_all('/\t?\ssrc="([^"]*\.(?:jpg|gif|png))"/x', $body, $m)) {
@@ -193,6 +217,8 @@ ul.da-widgets.gallery a    { display: inline-block; padding: 3px 3px; margin: 2p
 									}
 								}
 
+								da_widgets_log("DEBUG[{$widget_id}] - > " . $picture . ' => ' . $thumbfile);
+
 								if (is_file(ABSPATH . $thumbfile)) {
 									$body = str_replace(
 										$picture
@@ -206,6 +232,7 @@ ul.da-widgets.gallery a    { display: inline-block; padding: 3px 3px; margin: 2p
 					}
 
 					echo $body;
+					da_widgets_log("DEBUG[{$widget_id}] - Output content : {$body}");
 
 					if ($cache) {
 						$cache->end();
@@ -215,9 +242,10 @@ ul.da-widgets.gallery a    { display: inline-block; padding: 3px 3px; margin: 2p
 
 			}
 			catch(Exception $ex) {
-				if (self::MODE_DEBUG) 
-					printf ('%s : %s (%s)', get_class($ex), $ex->getMessage(), $ex->getCode());
+				da_widgets_log("ERROR[{$widget_id}] - " . get_class($ex) . ' - ' . $ex->getMessage() . ' (' . $ex->getCode() . ')');
 			}
+
+			da_widgets_log(str_pad(" END {$widget_id} ", 72 , '-', STR_PAD_BOTH));
 
 		}
 	}
