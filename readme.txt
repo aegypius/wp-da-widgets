@@ -14,7 +14,7 @@ This plugins allows display of deviantArt's feeds such as Journals, Favourites a
 
 This plugin is actually in 'Beta', many changes can occure during the next releases.
 
-Testers : 
+= Testers =
 * [Honigkuchenwolf](http://hokuwo.de/ "Wolfsgeheul")
 * [Flex](http://www.flex-it.fr/ "Work It Make It Flex It")
 
