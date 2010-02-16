@@ -198,7 +198,7 @@ function da_widgets_admin_page() {
 	);
 ?>
 	<fieldset>
-		<legend>Setup checks</legend>
+		<legend><?php _e('Setup checks', 'da-widgets')?></legend>
 		<ul>
 <?php
 
