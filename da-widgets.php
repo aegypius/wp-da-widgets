@@ -107,18 +107,15 @@ if (class_exists('WP_Widget')) {
 		}
 
 		function css() {
-?>
-<style type="text/css">
-ul.da-widgets.favourite,
-ul.da-widgets.gallery      { list-style: none; margin: 0; text-align: center;}
-ul.da-widgets.favourite li,
-ul.da-widgets.gallery li   { display: inline; }
-ul.da-widgets.favourite a,
-ul.da-widgets.gallery a    { display: inline-block; padding: 5px 5px; }
-ul.da-widgets.favourite a,
-ul.da-widgets.gallery a    { display: inline-block; padding: 3px 3px; margin: 2px 2px;border: 1px solid #CCC; }
-</style>
-<?php
+			if (get_option('user-css')) {
+				$css = get_option('user-css');
+			} else {
+				$css = 'ul.da-widgets{list-style:none;margin:0;text-align:center;}'
+					  .'ul.da-widgets li{display:inline;}'
+					  .'ul.da-widgets li a{display:inline-block;padding:3px;margin:2px;border: 1px solid #ececec;background-color: #fff}'
+					  .'ul.da-widgets li a:hover{border:1px solid #ccc;}';
+			}
+			printf('<style type="text/css">%s</style>', $css);
 		}
 
 		function widget($args, $instance) {
