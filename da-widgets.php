@@ -27,6 +27,7 @@ if (class_exists('WP_Widget')) {
 		static $log_level           = 1;
 
 		function DA_Widgets() {
+			self::$log_level = get_option('debug-enabled');
 			parent::WP_Widget(
 				'da-widget',
 				'deviantART',
@@ -248,7 +249,7 @@ ul.da-widgets.gallery a    { display: inline-block; padding: 3px 3px; margin: 2p
 
 			if (!is_string($message))
 				throw Exception('Log messages must be strings !');
-			error_log( strftime('%Y-%m-%d %H:%M:%S %Z') .' - '. rtrim($message, PHP_EOL) . PHP_EOL, 3, 'wp-content/cache' . DIRECTORY_SEPARATOR . 'da-widgets.log');
+			error_log( strftime('%Y-%m-%d %H:%M:%S %Z') .' - '. rtrim($message, PHP_EOL) . PHP_EOL, 3, 'wp-content/cache' . DIRECTORY_SEPARATOR . 'da-widgets-' .strftime('%Y-%m-%d'). '.log');
 		}
 	}
 

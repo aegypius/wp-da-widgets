@@ -56,6 +56,9 @@ function da_widgets_admin_settings() {
 	register_setting('da-widgets-settings', 'thumb-size-y', 'intval');
 	register_setting('da-widgets-settings', 'thumb-format');
 
+	// Advanced Settings
+	register_setting('da-widgets-settings', 'debug-enabled', 'intval');
+
 	// Adding Cache cleaning
 	register_setting('da-widgets-settings', 'empty-cache', 'da_widgets_admin_clean_cache' );
 
@@ -178,7 +181,14 @@ function da_widgets_admin_page() {
 				</dd>
 			</dl>
 		</fieldset>
-
+		<fieldset>
+			<legend><?php _e('Advanced options', 'da-widgets') ?></legend>
+			<p><?php _e('Defines options to advanced features.', 'da-widgets')?></p>
+			<dl>
+				<dt><label for="debug-enabled"><? _e('Enable debug log', 'da-widgets')?></label></dt>
+				<dd><input <?php echo get_option('debug-enabled') ? 'checked="checked"' : '' ?> type="checkbox" id="debug-enabled" name="debug-enabled" value="1"/></dd>
+			</dl>
+		</fieldset>
 		<input type="submit" value="<?php _e('Save', 'da-widgets')?>" class="button-primary" />
 		<input class="button" type="submit" value="<?php _e('Empty cache', 'da-widgets')?>" name="empty-cache" />
 	</form>
