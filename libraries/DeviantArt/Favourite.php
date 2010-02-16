@@ -13,6 +13,8 @@ class DeviantArt_Favourite extends Feed {
 	}
 
 	public function get($count = -1) {
+		if ($count == 0 || !is_numeric($count)) $count = -1;
+
 		$xml = new SimpleXmlElement($this->data);
 		$ns = $xml->getNamespaces(true);
 
