@@ -4,41 +4,34 @@ Plugin Name: deviantART widgets
 Plugin URI: http://github.com/aegypius/wp-da-widgets
 Description: This is a plugin which provide a widget to parse/display deviantART feeds
 Author: Nicolas "aegypius" LAURENT
-Version: 0.1.4
+Version: 0.1.5
 Author URI: http://www.aegypius.com
 */
 
 if (class_exists('WP_Widget')) {
 
-	require_once realpath(dirname(__FILE__)).'/includes/compat.php';
-	require_once realpath(dirname(__FILE__)).'/libraries/Cache.php';
-	require_once realpath(dirname(__FILE__)).'/libraries/Image.php';
-	require_once realpath(dirname(__FILE__)).'/libraries/DeviantArt/Log.php';
-	require_once realpath(dirname(__FILE__)).'/libraries/DeviantArt/Gallery.php';
-	require_once realpath(dirname(__FILE__)).'/libraries/DeviantArt/Favourite.php';
+	define('PLUGIN_ROOT', realpath(dirname(__FILE__)));
 
-	function da_widgets_log($message) {
-		if (!DA_Widgets::MODE_DEBUG)
-			return;
-
-		if (!is_string($message))
-			throw Exception('Log messages must be strings !');
-		error_log( strftime('%Y-%m-%d %H:%M:%S %Z') .' - '. rtrim($message, PHP_EOL) . PHP_EOL, 3, 'wp-content/cache' . DIRECTORY_SEPARATOR . 'da-widgets.log');
-	}
+	require_once PLUGIN_ROOT . '/includes/compat.php';
+	require_once PLUGIN_ROOT . '/libraries/Cache.php';
+	require_once PLUGIN_ROOT . '/libraries/Image.php';
+	require_once PLUGIN_ROOT . '/libraries/DeviantArt/Log.php';
+	require_once PLUGIN_ROOT . '/libraries/DeviantArt/Gallery.php';
+	require_once PLUGIN_ROOT . '/libraries/DeviantArt/Favourite.php';
 
 	class DA_Widgets extends WP_Widget {
-		const VERSION               = '0.1.4';
+		const VERSION               = '0.1.5';
 		const DA_WIDGET_LOG         = 1;
 		const DA_WIDGET_GALLERY     = 2;
 		const DA_WIDGET_FAVOURITE   = 3;
-		const MODE_DEBUG            = true;
+		static $log_level           = 1;
 
 		function DA_Widgets() {
 			parent::WP_Widget(
 				'da-widget',
 				'deviantART',
 				array(
-					'description' =>  __('deviantART Feeds Integration'),
+					'description' =>  __('deviantART Feeds Integration', 'da-widgets'),
 					'classname'   =>  'widget_da'
 				)
 			);
@@ -65,12 +58,12 @@ if (class_exists('WP_Widget')) {
 
 	?>
 		<p>
-			<label for="<?php echo $this->get_field_id('title')?>">Title : </label>
+			<label for="<?php echo $this->get_field_id('title')?>"><?php _e('Title', 'da-widgets')?> : </label>
 			<input class="widefat" type="text" id="<?php echo $this->get_field_id('title')?>" name="<?php echo $this->get_field_name('title')?>" value="<?php echo $title?>" />
 		</p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id('type')?>">Content : </label>
+			<label for="<?php echo $this->get_field_id('type')?>"><?php _e('Content', 'da-widgets')?> : </label>
 			<select class="widefat" id="<?php echo $this->get_field_id('type')?>" name="<?php echo $this->get_field_name('type')?>">
 				<option <?php selected(self::DA_WIDGET_LOG, $type); ?> value="<?php echo self::DA_WIDGET_LOG?>">Journal</option>
 				<option <?php selected(self::DA_WIDGET_GALLERY, $type); ?> value="<?php echo self::DA_WIDGET_GALLERY?>">Gallery</option>
@@ -79,14 +72,14 @@ if (class_exists('WP_Widget')) {
 		</p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id('deviant')?>">Deviant : </label>
+			<label for="<?php echo $this->get_field_id('deviant')?>"><?php _e('Deviant', 'da-widgets')?> : </label>
 			<input class="widefat" type="text" id="<?php echo $this->get_field_id('deviant')?>" name="<?php echo $this->get_field_name('deviant')?>" value="<?php echo $deviant?>" />
 		</p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id('items')?>">Items to display : </label>
+			<label for="<?php echo $this->get_field_id('items')?>"><?php _e('Items to display', 'da-widgets')?> : </label>
 			<select class="widefat" id="<?php echo $this->get_field_id('items')?>" name="<?php echo $this->get_field_name('items')?>">
-				<option <?php selected(-1 , $items) ?> value="-1"><?php echo __('All')?></option>
+				<option <?php selected(-1 , $items) ?> value="-1"><?php _e('All', 'da-widgets')?></option>
 			<?php foreach (range(1,10) as $v) : ?>
 				<option <?php selected($v , $items) ?> value="<?php echo $v?>"><?php echo $v?></option>
 			<?php endforeach; ?>
@@ -96,14 +89,14 @@ if (class_exists('WP_Widget')) {
 		<?php if ($type == self::DA_WIDGET_LOG) : ?>
 		<p>
 			<input class="checkbox" type="checkbox" id="<?php echo $this->get_field_id('html')?>" name="<?php echo $this->get_field_name('html')?>" value="1" <?php if ( $html ) { echo 'checked="checked"'; } ?>/>
-			<label for="<?php echo $this->get_field_id('html')?>">Keep original formating</label>
+			<label for="<?php echo $this->get_field_id('html')?>"><?php _e('Keep original formating', 'da-widgets')?></label>
 		</p>
 		<?php else : ?>
 		<p>
-			<label for="<?php echo $this->get_field_id('rating')?>">Content Rating : </label>
+			<label for="<?php echo $this->get_field_id('rating')?>"><?php _e('Content Rating', 'da-widgets')?> : </label>
 			<select class="widefat" id="<?php echo $this->get_field_id('rating')?>" name="<?php echo $this->get_field_name('rating')?>">
-				<option <?php selected('nonadult', $rating); ?> value="nonadult"><?php _e('Forbid adult content')?></option>
-				<option <?php selected('all', $rating); ?> value="all"><?php _e('Allow adult content')?></option>
+				<option <?php selected('nonadult', $rating); ?> value="nonadult"><?php _e('Forbid adult content', 'da-widgets')?></option>
+				<option <?php selected('all', $rating); ?> value="all"><?php _e('Allow adult content', 'da-widgets')?></option>
 			</select>
 		</p>
 		<?php endif; ?>
@@ -130,8 +123,8 @@ ul.da-widgets.gallery a    { display: inline-block; padding: 3px 3px; margin: 2p
 		function widget($args, $instance) {
 			try {
 				extract($args, EXTR_SKIP);
-				da_widgets_log(str_pad(" BEGIN {$widget_id} ", 72, '-', STR_PAD_BOTH));
-				da_widgets_log("DEBUG[{$widget_id}] - Frontend Initalization");
+				self::log(str_pad(" BEGIN {$widget_id} ", 72, '-', STR_PAD_BOTH));
+				self::log("DEBUG[{$widget_id}] - Frontend Initalization");
 
 				$title = esc_attr($instance['title']);
 				$type = esc_attr($instance['type']);
@@ -140,9 +133,9 @@ ul.da-widgets.gallery a    { display: inline-block; padding: 3px 3px; margin: 2p
 				$items = intval($instance['items']);
 				$rating = esc_attr($instance['rating']);
 
-				da_widgets_log("DEBUG[{$widget_id}] - Cache is "       . (get_option('cache-enabled') ? 'enabled' : 'disabled') . " (duration : " . get_option('cache-duration') . ")");
-				da_widgets_log("DEBUG[{$widget_id}] - Thumnbails are " . (get_option('thumb-enabled') ? 'enabled' : 'disabled') . ' (size : ' . get_option('thumb-size-x') . 'x'. get_option('thumb-size-y') .')');
-				da_widgets_log("DEBUG[{$widget_id}] - Config : "       . print_r($instance, true));
+				self::log("DEBUG[{$widget_id}] - Cache is "       . (get_option('cache-enabled') ? 'enabled' : 'disabled') . " (duration : " . get_option('cache-duration') . ")");
+				self::log("DEBUG[{$widget_id}] - Thumnbails are " . (get_option('thumb-enabled') ? 'enabled' : 'disabled') . ' (size : ' . get_option('thumb-size-x') . 'x'. get_option('thumb-size-y') .')');
+				self::log("DEBUG[{$widget_id}] - Config : "       . print_r($instance, true));
 
 				echo $before_widget;
 				echo $before_title . $title . $after_title;
@@ -151,11 +144,11 @@ ul.da-widgets.gallery a    { display: inline-block; padding: 3px 3px; margin: 2p
 					$fragment = 'wp-content/cache' . DIRECTORY_SEPARATOR . 'da-widgets-' . sha1(serialize($instance)) . '.html.gz';
 					$duration = sprintf('+%d minutes', get_option('cache-duration'));
 					$cache = new Cache(ABSPATH . $fragment, $duration);
-					da_widgets_log("DEBUG[{$widget_id}] - Cache fragment : "       . $fragment);
+					self::log("DEBUG[{$widget_id}] - Cache fragment : "       . $fragment);
 				}
 
 				if (!$cache || $cache->start()) {
-					da_widgets_log("DEBUG[{$widget_id}] - Generating content");
+					self::log("DEBUG[{$widget_id}] - Generating content");
 
 					switch ($type) {
 						case self::DA_WIDGET_LOG:
@@ -172,12 +165,12 @@ ul.da-widgets.gallery a    { display: inline-block; padding: 3px 3px; margin: 2p
 							break;
 					}
 
-					da_widgets_log("DEBUG[{$widget_id}] - Preparing content : {$body}");
+					self::log("DEBUG[{$widget_id}] - Preparing content : {$body}");
 
 
 					if (in_array($type, array(self::DA_WIDGET_GALLERY, self::DA_WIDGET_FAVOURITE)) && get_option('thumb-enabled')) {
 
-						da_widgets_log("DEBUG[{$widget_id}] - Generating thumbnails");
+						self::log("DEBUG[{$widget_id}] - Generating thumbnails");
 
 						// Creating Thumbnail cache
 						if (preg_match_all('/\t?\ssrc="([^"]*\.(?:jpg|gif|png))"/x', $body, $m)) {
@@ -217,7 +210,7 @@ ul.da-widgets.gallery a    { display: inline-block; padding: 3px 3px; margin: 2p
 									}
 								}
 
-								da_widgets_log("DEBUG[{$widget_id}] - > " . $picture . ' => ' . $thumbfile);
+								self::log("DEBUG[{$widget_id}] - > " . $picture . ' => ' . $thumbfile);
 
 								if (is_file(ABSPATH . $thumbfile)) {
 									$body = str_replace(
@@ -232,7 +225,7 @@ ul.da-widgets.gallery a    { display: inline-block; padding: 3px 3px; margin: 2p
 					}
 
 					echo $body;
-					da_widgets_log("DEBUG[{$widget_id}] - Output content : {$body}");
+					self::log("DEBUG[{$widget_id}] - Output content : {$body}");
 
 					if ($cache) {
 						$cache->end();
@@ -242,16 +235,24 @@ ul.da-widgets.gallery a    { display: inline-block; padding: 3px 3px; margin: 2p
 
 			}
 			catch(Exception $ex) {
-				da_widgets_log("ERROR[{$widget_id}] - " . get_class($ex) . ' - ' . $ex->getMessage() . ' (' . $ex->getCode() . ')');
+				self::log("ERROR[{$widget_id}] - " . get_class($ex) . ' - ' . $ex->getMessage() . ' (' . $ex->getCode() . ')');
 			}
 
-			da_widgets_log(str_pad(" END {$widget_id} ", 72 , '-', STR_PAD_BOTH));
+			self::log(str_pad(" END {$widget_id} ", 72 , '-', STR_PAD_BOTH));
 
+		}
+
+		public static function log($message) {
+			if (!self::$log_level)
+				return;
+
+			if (!is_string($message))
+				throw Exception('Log messages must be strings !');
+			error_log( strftime('%Y-%m-%d %H:%M:%S %Z') .' - '. rtrim($message, PHP_EOL) . PHP_EOL, 3, 'wp-content/cache' . DIRECTORY_SEPARATOR . 'da-widgets.log');
 		}
 	}
 
-	add_action('widgets_init',			create_function('', 'return register_widget("DA_Widgets");'));
-	add_action('wp_head',				array('DA_Widgets', 'css'));
+	add_action('widgets_init', create_function('', 'return register_widget("DA_Widgets");'));
+	add_action('wp_head',      array('DA_Widgets', 'css'));
 	require_once realpath(dirname(__FILE__)).'/admin/admin.php';
 }
-?>
