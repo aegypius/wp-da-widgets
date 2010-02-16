@@ -5,6 +5,7 @@
 #da-widgets-settings fieldset dt, #da-widgets-settings fieldset dd {line-height:24px;}
 #da-widgets-settings fieldset dt {min-width: 400px;float: left; clear:both;margin-right: 3px;}
 #da-widgets-settings input.button-primary {margin: 10px 0 0 418px;}
+#da-widgets-settings fieldset {margin-top: 10px;}
 #da-widgets-settings fieldset label.disabled {color: #CCC}
 #da-widgets-settings legend {display: block; width: 100%; font-size: 1.17em; margin: 1em 0 0 0; font-weight: normal; border-bottom: 1px dotted #CCC;}
 #da-widgets-settings legend + p {margin-top: -1em; font-style: italic;}
