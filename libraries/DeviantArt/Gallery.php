@@ -30,6 +30,9 @@ class DeviantArt_Gallery extends Feed {
 			if ($media->text)
 				continue;
 
+			if ($media->text)
+				continue;
+
 			$items .= sprintf(
 				'<li><a href="%1$s" title="%2$s - %3$s"><img src="%4$s" alt="%2$s - %3$s"/></a></li>'
 				, $item->link
