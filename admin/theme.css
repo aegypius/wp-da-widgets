@@ -4,11 +4,25 @@
 #da-widgets-settings fieldset dl, #da-widgets-settings fieldset p {padding-left:15px}
 #da-widgets-settings fieldset dt, #da-widgets-settings fieldset dd {line-height:24px;}
 #da-widgets-settings fieldset dt {min-width: 400px;float: left; clear:both;margin-right: 3px;}
+#da-widgets-settings dl.horizontal dt { display: block; float: none;}
+#da-widgets-settings dl.horizontal textarea { width: 100%; }
 #da-widgets-settings input.button-primary {margin: 10px 0 0 418px;}
 #da-widgets-settings fieldset {margin-top: 10px;}
 #da-widgets-settings fieldset label.disabled {color: #CCC}
 #da-widgets-settings legend {display: block; width: 100%; font-size: 1.17em; margin: 1em 0 0 0; font-weight: normal; border-bottom: 1px dotted #CCC;}
 #da-widgets-settings legend + p {margin-top: -1em; font-style: italic;}
+#da-widgets-settings legend a[href^="#"] {text-decoration: none;}
+#da-widgets-settings fieldset.tab {padding : 15px;}
+#da-widgets-settings fieldset.tab > legend {margin-left : -15px;}
+#da-widgets-settings .source,
+#da-widgets-settings pre { font-family: "Consolas","Bitstream Vera Sans Mono","Courier New",Courier,monospace; }
+#da-widgets-settings pre { border-left: 4px solid #CCC; padding: 2px 2px 2px 3px; margin: 2px 2px 2px 15px;background-color: #ececec;}
+/* --- Tabs Management --- */
+#da-widgets-settings.tabs .tab {border: 1px solid #ccc; position: relative; z-index: 1}
+#da-widgets-settings.tabs div.tab {padding: 5px 15px; border-radius: 0px 0px 3px 3px; -moz-border-radius: 0px 3px 3px 3px; -webkit-border-radius: 0px 0px 3px 3px;}
+#da-widgets-settings.tabs li.tab {	position: relative; display: inline; border-bottom: none; padding: 5px 0 3px 0; margin: 0; background: #f9f9f9;border-radius: 3px 3px 0px 0px;-moz-border-radius: 3px 3px 0px 0px;-webkit-border-radius: 3px 3px 0px 0px;}
+#da-widgets-settings.tabs li.active { z-index: 2}
+#da-widgets-settings.tabs li.tab a { padding: 0px 10px; text-decoration: none;}
 /* --- Message Management --- */
 #da-widgets-settings ul .message {border: 1px solid #8aceff;padding: 3px 15px 5px 27px;margin: 0 0 5px 15px;line-height: 15px;border-radius: 3px;-moz-border-radius: 3px;-webkit-border-radius: 3px;background: #e2f5fe url(theme/accept.png) no-repeat 5px center;}
 #da-widgets-settings ul .message.warning {border-color: #f8c44f;background-color: #fee8b9;background-image: url(theme/error.png);}
