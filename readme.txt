@@ -3,8 +3,8 @@ Contributors: aegypius
 Tags: widget, gallery, image
 Donate link: http://github.com/aegypius/wp-da-widgets
 Requires at least: 2.8.0
-Tested up to: 2.9.1
-Stable tag: 0.1.4
+Tested up to: 2.9.2
+Stable tag: 0.1.5
 
 Displays deviantArt feeds as wordpress widgets
 
@@ -39,6 +39,12 @@ Nothing special.
 Nothing yet.
 
 == Changelog ==
+
+= 0.1.5 =
+* Issue #1: Fixed
+* Added an option to enable debugging in global options
+* Added the possibility to customize CSS styles for the widget in global options
+* Fixing locale calls to allow string translation in differents languages (help granted !)
 
 = 0.1.4 =
 * Issue #1 : Adding an "Empty cache" button to clean the plugin cache
