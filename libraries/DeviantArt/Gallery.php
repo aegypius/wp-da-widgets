@@ -6,8 +6,8 @@ class DeviantArt_Gallery extends Feed {
 	const BACKEND_URL = 'http://backend.deviantart.com/rss.xml?q=gallery%%3A%s';
 	protected $rating;
 
-	public function DeviantArt_Gallery($username, $rating = null) {
-		$url = sprintf(self::BACKEND_URL, $username);
+	public function DeviantArt_Gallery($username, $rating = null, $scraps = false) {
+		$url = sprintf(self::BACKEND_URL, $username . ($scraps ? '+in%3Ascraps' : '+-in%3Ascraps'));
 		$this->rating = $rating;
 		parent::Feed($url);
 	}

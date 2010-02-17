@@ -4,7 +4,7 @@ Plugin Name: deviantART widgets
 Plugin URI: http://github.com/aegypius/wp-da-widgets
 Description: This is a plugin which provide a widget to parse/display deviantART feeds
 Author: Nicolas "aegypius" LAURENT
-Version: 0.1.5
+Version: 0.1.6
 Author URI: http://www.aegypius.com
 */
 
@@ -20,7 +20,7 @@ if (class_exists('WP_Widget')) {
 	require_once PLUGIN_ROOT . '/libraries/DeviantArt/Favourite.php';
 
 	class DA_Widgets extends WP_Widget {
-		const VERSION               = '0.1.5';
+		const VERSION               = '0.1.6';
 		const DA_WIDGET_LOG         = 1;
 		const DA_WIDGET_GALLERY     = 2;
 		const DA_WIDGET_FAVOURITE   = 3;
@@ -46,7 +46,8 @@ if (class_exists('WP_Widget')) {
 				'deviant'	=> '',
 				'rating'	=> 'nonadult',
 				'items'		=> 10,
-				'html'		=> 1
+				'html'		=> 1,
+				'scraps'	=> 0
 			));
 
 			$title		= esc_attr($instance['title']);
@@ -54,8 +55,9 @@ if (class_exists('WP_Widget')) {
 			$deviant	= trim(esc_attr($instance['deviant']));
 			$items		= intval($instance['items']);
 
-			$html		= intval($instance['html']);
 			$rating		= esc_attr($instance['rating']);
+			$html		= intval($instance['html']);
+			$scraps		= intval($instance['scraps']);
 
 	?>
 		<p>
@@ -102,6 +104,12 @@ if (class_exists('WP_Widget')) {
 				<option <?php selected('all', $rating); ?> value="all"><?php _e('Allow adult content', 'da-widgets')?></option>
 			</select>
 		</p>
+			<?php if ($type == self::DA_WIDGET_GALLERY) : ?>
+		<p>
+			<input class="checkbox" type="checkbox" id="<?php echo $this->get_field_id('scraps')?>" name="<?php echo $this->get_field_name('scraps')?>" value="1" <?php if ( $scraps ) { echo 'checked="checked"'; } ?>/>
+			<label for="<?php echo $this->get_field_id('scraps')?>"><?php _e('Show scraps', 'da-widgets')?></label>
+		</p>
+			<?php endif; ?>
 		<?php endif; ?>
 
 
@@ -127,12 +135,13 @@ if (class_exists('WP_Widget')) {
 				self::log(str_pad(" BEGIN {$widget_id} ", 72, '-', STR_PAD_BOTH));
 				self::log("DEBUG[{$widget_id}] - Frontend Initalization");
 
-				$title = esc_attr($instance['title']);
-				$type = esc_attr($instance['type']);
+				$title   = esc_attr($instance['title']);
+				$type    = esc_attr($instance['type']);
 				$deviant = esc_attr($instance['deviant']);
-				$html = intval($instance['html']);
-				$items = intval($instance['items']);
-				$rating = esc_attr($instance['rating']);
+				$items   = intval($instance['items']);
+				$rating  = esc_attr($instance['rating']);
+				$html    = intval($instance['html']);
+				$scraps  = intval($instance['scraps']);
 
 
 				self::log("DEBUG[{$widget_id}] - Cache is "       . (get_option('cache-enabled') ? 'enabled' : 'disabled') . " (duration : " . get_option('cache-duration') . ")");
@@ -159,7 +168,7 @@ if (class_exists('WP_Widget')) {
 							$body = $res->get($items);
 							break;
 						case self::DA_WIDGET_GALLERY:
-							$res = new DeviantArt_Gallery($deviant, $rating);
+							$res = new DeviantArt_Gallery($deviant, $rating, $scraps);
 							$body = $res->get($items);
 							break;
 						case self::DA_WIDGET_FAVOURITE:
