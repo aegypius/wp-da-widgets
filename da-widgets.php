@@ -260,7 +260,6 @@ if (class_exists('WP_Widget')) {
 	add_action('wp_head',      array('DA_Widgets', 'css'));
 
 	// Setup I18n
-	setlocale(LC_ALL, 'fr_FR');
 	load_plugin_textdomain('da-widgets', PLUGIN_ROOT, basename(dirname(__FILE__)));
 
 	require_once realpath(dirname(__FILE__)).'/admin/admin.php';
