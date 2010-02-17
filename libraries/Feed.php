@@ -4,22 +4,26 @@ class Feed {
 
 	protected $encoding = 'utf-8';
 	protected $url;
-	protected $data;
 
 	public function Feed($url = null) {
 		if (is_string($url) && strlen($url)) {
 			$this->url = trim($url);
-			$this->request();
 		}
 	}
 
-	protected function request() {
+	protected function request($url = null, $ua = null) {
 
 		// curl initialization
 		$ch = curl_init();
 
-		curl_setopt($ch, CURLOPT_URL, $this->url);
+		if (empty($url))
+			$url = $this->url;
+
+		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_TIMEOUT, 3);
+
+		if (!empty($ua))
+			curl_setopt($ch, CURLOPT_USERAGENT, $ua);
 
 		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: text/xml'));
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -35,7 +39,7 @@ class Feed {
 			curl_close($ch);
 		}
 
-		return $this->data = $content;
+		return $content;
 	}
 
 }

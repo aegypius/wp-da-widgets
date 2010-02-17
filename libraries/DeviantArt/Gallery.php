@@ -5,15 +5,22 @@ class DeviantArt_Gallery extends Feed {
 
 	const BACKEND_URL = 'http://backend.deviantart.com/rss.xml?q=gallery%%3A%s';
 	protected $rating;
+	protected $username;
 
-	public function DeviantArt_Gallery($username, $rating = null, $scraps = false) {
-		$url = sprintf(self::BACKEND_URL, $username . ($scraps ? '+in%3Ascraps' : '+-in%3Ascraps'));
+	public function DeviantArt_Gallery($username) {
+		$this->username = trim($username);
 		$this->rating = $rating;
-		parent::Feed($url);
+		parent::Feed();
 	}
 
-	public function get($count = -1) {
+	public function get($count = -1, $rating = null, $filter = null) {
 		if ($count == 0 || !is_numeric($count)) $count = -1;
+
+		$url = sprintf(self::BACKEND_URL, $this->username)
+		     . ($filter == -1 ? '+in%3Ascraps'  : '')
+		     . ($filter  >  0 ? '%2F' . $filter : '');
+
+		$this->data = $this->request($url);
 
 		$xml = new SimpleXmlElement($this->data);
 		$ns = $xml->getNamespaces(true);
@@ -49,6 +56,18 @@ class DeviantArt_Gallery extends Feed {
 		}
 
 		return sprintf('<ul class="da-widgets gallery">%s</ul>', $items);
+	}
+
+	public function getCategories() {
+
+		$url = sprintf('http://%s.deviantart.com/gallery/', $this->username);
+		$content = $this->request($url, "Mozilla/5.0 (Android;)");
+
+		$cats = array();
+		if (preg_match_all(';\s+href="http://[^\.]+\.deviantart\.com/\?tab=gallery&id=([^&]+)[^"]+".*<h3>([^<]+);', $content, $m)) {
+			$cats = array_combine($m[1], $m[2]);
+		}
+		return $cats;
 	}
 
 	public function __toString() {

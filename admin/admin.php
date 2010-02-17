@@ -246,21 +246,21 @@ function da_widgets_admin_page() {
 
 				<p>
 					<ul>
-						<li><? _e('Galleries', 'da-widgets')?> : 
+						<li><? _e('Galleries', 'da-widgets')?> :
 				<pre>
 &lt;ul class="da-widgets gallery"&gt;
 	&lt;li&gt;&lt;a [...]&gt;&lt;img [...]&gt;&lt;/a&gt;&lt;/li&gt;
 	&lt;li&gt;&lt;a [...]&gt;&lt;img [...]&gt;&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;</pre>
 						</li>
-						<li><? _e('Favourites', 'da-widgets')?> : 
+						<li><? _e('Favourites', 'da-widgets')?> :
 				<pre>
 &lt;ul class="da-widgets favourite"&gt;
 	&lt;li&gt;&lt;a [...]&gt;&lt;img [...]&gt;&lt;/a&gt;&lt;/li&gt;
 	&lt;li&gt;&lt;a [...]&gt;&lt;img [...]&gt;&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;</pre>
 						</li>
-						<li><? _e('Logs', 'da-widgets')?> : 
+						<li><? _e('Logs', 'da-widgets')?> :
 				<pre>
 &lt;dl class="da-widgets log"&gt;
 	&lt;dt&gt;&lt;a [...]&gt;{title}&lt;/a&gt;&lt;/dt&gt;

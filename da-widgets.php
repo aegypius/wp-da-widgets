@@ -47,7 +47,7 @@ if (class_exists('WP_Widget')) {
 				'rating'	=> 'nonadult',
 				'items'		=> 10,
 				'html'		=> 1,
-				'scraps'	=> 0
+				'filter'	=> 0
 			));
 
 			$title		= esc_attr($instance['title']);
@@ -57,7 +57,7 @@ if (class_exists('WP_Widget')) {
 
 			$rating		= esc_attr($instance['rating']);
 			$html		= intval($instance['html']);
-			$scraps		= intval($instance['scraps']);
+			$filter		= intval($instance['filter']);
 
 	?>
 		<p>
@@ -104,12 +104,30 @@ if (class_exists('WP_Widget')) {
 				<option <?php selected('all', $rating); ?> value="all"><?php _e('Allow adult content', 'da-widgets')?></option>
 			</select>
 		</p>
-			<?php if ($type == self::DA_WIDGET_GALLERY) : ?>
+<?php
+			switch ($type) {
+				case self::DA_WIDGET_GALLERY:
+					$res = new DeviantArt_Gallery($deviant, $rating, $scraps);
+					break;
+				default:
+				case self::DA_WIDGET_FAVOURITE:
+					$res = new DeviantArt_Favourite($deviant, $rating, $scraps);
+					break;
+			}
+
+			foreach ($res->getCategories() as $categoryId=>$categoryName) {
+				$options .= sprintf('<option value="%s"%s>%s</option>', $categoryId, ($categoryId == $filter ? ' selected="selected"' : ''), $categoryName);
+			}
+?>
 		<p>
-			<input class="checkbox" type="checkbox" id="<?php echo $this->get_field_id('scraps')?>" name="<?php echo $this->get_field_name('scraps')?>" value="1" <?php if ( $scraps ) { echo 'checked="checked"'; } ?>/>
-			<label for="<?php echo $this->get_field_id('scraps')?>"><?php _e('Show scraps', 'da-widgets')?></label>
+			<label for="<?php echo $this->get_field_id('filter')?>"><?php _e('Category filter', 'da-widgets')?> : </label>
+			<select class="widefat" id="<?php echo $this->get_field_id('filter')?>" name="<?php echo $this->get_field_name('filter')?>">
+				<option <?php selected(0, $filter); ?> value="0"><?php _e('Disabled', 'da-widgets')?></option>
+				<?php echo $options ?>
+				<option <?php selected(-1, $filter); ?> value="-1"><?php _e('Scraps', 'da-widgets')?></option>
+			</select>
 		</p>
-			<?php endif; ?>
+
 		<?php endif; ?>
 
 
@@ -141,8 +159,7 @@ if (class_exists('WP_Widget')) {
 				$items   = intval($instance['items']);
 				$rating  = esc_attr($instance['rating']);
 				$html    = intval($instance['html']);
-				$scraps  = intval($instance['scraps']);
-
+				$filter  = intval($instance['filter']);
 
 				self::log("DEBUG[{$widget_id}] - Cache is "       . (get_option('cache-enabled') ? 'enabled' : 'disabled') . " (duration : " . get_option('cache-duration') . ")");
 				self::log("DEBUG[{$widget_id}] - Thumnbails are " . (get_option('thumb-enabled') ? 'enabled' : 'disabled') . ' (size : ' . get_option('thumb-size-x') . 'x'. get_option('thumb-size-y') .')');
@@ -168,12 +185,12 @@ if (class_exists('WP_Widget')) {
 							$body = $res->get($items);
 							break;
 						case self::DA_WIDGET_GALLERY:
-							$res = new DeviantArt_Gallery($deviant, $rating, $scraps);
-							$body = $res->get($items);
+							$res = new DeviantArt_Gallery($deviant);
+							$body = $res->get($items, $rating, $filter);
 							break;
 						case self::DA_WIDGET_FAVOURITE:
-							$res = new DeviantArt_Favourite($deviant, $rating);
-							$body = $res->get($items);
+							$res = new DeviantArt_Favourite($deviant);
+							$body = $res->get($items, $rating, $filter);
 							break;
 					}
 
