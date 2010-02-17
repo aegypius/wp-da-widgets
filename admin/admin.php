@@ -36,8 +36,8 @@ function da_widgets_admin_head() {
 function da_widgets_admin_menu() {
 	add_submenu_page(
 		'plugins.php',								// parent
-		__( 'deviantArt Widgets', 'da-widgets' ),	// page_title
-		__( 'deviantArt Widgets', 'da-widgets' ),	// menu_title
+		__( 'deviantART Widgets', 'da-widgets' ),	// page_title
+		__( 'deviantART Widgets', 'da-widgets' ),	// menu_title
 		8,											// capability required
 		DA_WIDGETS_ADMIN_PAGE,						// file/handle
 		'da_widgets_admin_page'						// function
@@ -136,7 +136,7 @@ function da_widgets_admin_page() {
 ?>
 <div id="da-widgets-settings" class="wrap">
 	<div id="da-widgets-settings-icon" class="icon32"><br /></div>
-	<h2><?php _e('deviantArt Widgets Settings', 'da-widgets') ?></h2>
+	<h2><?php _e('deviantART Widgets Settings', 'da-widgets') ?></h2>
 	<p id="da-widgets-version"> version <?php echo DA_Widgets::VERSION ?></p>
 
 	<ul>

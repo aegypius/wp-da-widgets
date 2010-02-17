@@ -1,4 +1,4 @@
-=== deviantArt Widgets ===
+=== deviantART Widgets ===
 Contributors: aegypius
 Tags: widget, gallery, image
 Donate link: http://github.com/aegypius/wp-da-widgets
@@ -6,7 +6,7 @@ Requires at least: 2.8.0
 Tested up to: 2.9.2
 Stable tag: 0.1.5
 
-Displays deviantArt feeds as wordpress widgets
+Displays deviantART feeds as wordpress widgets
 
 == Description ==
 
@@ -32,7 +32,7 @@ Installing da-widgets should take fewer than 3 minutes
 
 == Upgrade Notice ==
 
-Nothing special.
+* Rembember to clean cache after an upgrade
 
 == Frequently Asked Questions ==
 
