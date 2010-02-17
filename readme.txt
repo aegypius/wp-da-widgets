@@ -40,6 +40,9 @@ Nothing yet.
 
 == Changelog ==
 
+= 0.1.6 =
+* Issue #3: Adding support for category filtering on galleries and favourites
+
 = 0.1.5 =
 * Issue #1: Fixed
 * Added an option to enable debugging in global options
