@@ -19,6 +19,15 @@ if (class_exists('WP_Widget')) {
 	require_once PLUGIN_ROOT . '/libraries/DeviantArt/Gallery.php';
 	require_once PLUGIN_ROOT . '/libraries/DeviantArt/Favourite.php';
 
+	function da_widgets_log($message) {
+		if (!DA_Widgets::MODE_DEBUG)
+			return;
+
+		if (!is_string($message))
+			throw Exception('Log messages must be strings !');
+		error_log( strftime('%Y-%m-%d %H:%M:%S %Z') .' - '. rtrim($message, PHP_EOL) . PHP_EOL, 3, 'wp-content/cache' . DIRECTORY_SEPARATOR . 'da-widgets.log');
+	}
+
 	class DA_Widgets extends WP_Widget {
 		const VERSION               = '0.1.5';
 		const DA_WIDGET_LOG         = 1;
@@ -80,7 +89,9 @@ if (class_exists('WP_Widget')) {
 		<p>
 			<label for="<?php echo $this->get_field_id('items')?>"><?php _e('Items to display', 'da-widgets')?> : </label>
 			<select class="widefat" id="<?php echo $this->get_field_id('items')?>" name="<?php echo $this->get_field_name('items')?>">
+
 				<option <?php selected(-1 , $items) ?> value="-1"><?php _e('All', 'da-widgets')?></option>
+
 			<?php foreach (range(1,10) as $v) : ?>
 				<option <?php selected($v , $items) ?> value="<?php echo $v?>"><?php echo $v?></option>
 			<?php endforeach; ?>
@@ -121,6 +132,7 @@ if (class_exists('WP_Widget')) {
 		function widget($args, $instance) {
 			try {
 				extract($args, EXTR_SKIP);
+
 				self::log(str_pad(" BEGIN {$widget_id} ", 72, '-', STR_PAD_BOTH));
 				self::log("DEBUG[{$widget_id}] - Frontend Initalization");
 
@@ -130,6 +142,7 @@ if (class_exists('WP_Widget')) {
 				$html = intval($instance['html']);
 				$items = intval($instance['items']);
 				$rating = esc_attr($instance['rating']);
+
 
 				self::log("DEBUG[{$widget_id}] - Cache is "       . (get_option('cache-enabled') ? 'enabled' : 'disabled') . " (duration : " . get_option('cache-duration') . ")");
 				self::log("DEBUG[{$widget_id}] - Thumnbails are " . (get_option('thumb-enabled') ? 'enabled' : 'disabled') . ' (size : ' . get_option('thumb-size-x') . 'x'. get_option('thumb-size-y') .')');
@@ -142,6 +155,7 @@ if (class_exists('WP_Widget')) {
 					$fragment = 'wp-content/cache' . DIRECTORY_SEPARATOR . 'da-widgets-' . sha1(serialize($instance)) . '.html.gz';
 					$duration = sprintf('+%d minutes', get_option('cache-duration'));
 					$cache = new Cache(ABSPATH . $fragment, $duration);
+
 					self::log("DEBUG[{$widget_id}] - Cache fragment : "       . $fragment);
 				}
 
@@ -164,7 +178,6 @@ if (class_exists('WP_Widget')) {
 					}
 
 					self::log("DEBUG[{$widget_id}] - Preparing content : {$body}");
-
 
 					if (in_array($type, array(self::DA_WIDGET_GALLERY, self::DA_WIDGET_FAVOURITE)) && get_option('thumb-enabled')) {
 
@@ -223,6 +236,7 @@ if (class_exists('WP_Widget')) {
 					}
 
 					echo $body;
+
 					self::log("DEBUG[{$widget_id}] - Output content : {$body}");
 
 					if ($cache) {
