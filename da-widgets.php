@@ -19,15 +19,6 @@ if (class_exists('WP_Widget')) {
 	require_once PLUGIN_ROOT . '/libraries/DeviantArt/Gallery.php';
 	require_once PLUGIN_ROOT . '/libraries/DeviantArt/Favourite.php';
 
-	function da_widgets_log($message) {
-		if (!DA_Widgets::MODE_DEBUG)
-			return;
-
-		if (!is_string($message))
-			throw Exception('Log messages must be strings !');
-		error_log( strftime('%Y-%m-%d %H:%M:%S %Z') .' - '. rtrim($message, PHP_EOL) . PHP_EOL, 3, 'wp-content/cache' . DIRECTORY_SEPARATOR . 'da-widgets.log');
-	}
-
 	class DA_Widgets extends WP_Widget {
 		const VERSION               = '0.1.5';
 		const DA_WIDGET_LOG         = 1;
@@ -50,7 +41,7 @@ if (class_exists('WP_Widget')) {
 		function form($instance) {
 
 			$instance = wp_parse_args((array)$instance, array(
-				'title'		=> 'deviantArt',
+				'title'		=> 'deviantART',
 				'type'		=> self::DA_WIDGET_LOG,
 				'deviant'	=> '',
 				'rating'	=> 'nonadult',
@@ -264,7 +255,13 @@ if (class_exists('WP_Widget')) {
 		}
 	}
 
+	// Register Widget
 	add_action('widgets_init', create_function('', 'return register_widget("DA_Widgets");'));
 	add_action('wp_head',      array('DA_Widgets', 'css'));
+
+	// Setup I18n
+	setlocale(LC_ALL, 'fr_FR');
+	load_plugin_textdomain('da-widgets', PLUGIN_ROOT, basename(dirname(__FILE__)));
+
 	require_once realpath(dirname(__FILE__)).'/admin/admin.php';
 }
