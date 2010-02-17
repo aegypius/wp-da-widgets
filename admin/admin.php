@@ -158,12 +158,12 @@ function da_widgets_admin_page() {
 					<dt><label <?php echo !get_option('cache-enabled') ? 'class="disabled"' : '' ?> for="cache-duration"><?php _e('Cache duration', 'da-widgets') ?></label></dt>
 					<dd>
 						<select <?php echo !get_option('cache-enabled') ? 'disabled="disabled"' : '' ?> id="cache-duration" name="cache-duration">
-							<option <?php selected(get_option('cache-duration'),   15)?> value="15">15 <?php _e('minutes', 'da-widgets')?> (default)</option>
-							<option <?php selected(get_option('cache-duration'),   30)?> value="30">30 <?php _e('minutes', 'da-widgets')?></option>
-							<option <?php selected(get_option('cache-duration'),   60)?> value="60">1 <?php _e('hour', 'da-widgets')?></option>
-							<option <?php selected(get_option('cache-duration'),  120)?> value="120">2 <?php _e('hour', 'da-widgets')?></option>
-							<option <?php selected(get_option('cache-duration'),  180)?> value="180">3 <?php _e('hour', 'da-widgets')?></option>
-							<option <?php selected(get_option('cache-duration'), 1440)?> value="1440">1 <?php _e('day', 'da-widgets')?></option>
+							<option <?php selected(get_option('cache-duration'),   15)?> value="15"><?php   printf(_n('%d minute', '%d minutes', 15), 15)?> (default)</option>
+							<option <?php selected(get_option('cache-duration'),   30)?> value="30"><?php   printf(_n('%d minute', '%d minutes', 30), 30)?></option>
+							<option <?php selected(get_option('cache-duration'),   60)?> value="60"><?php   printf(_n('%d hour',   '%d hours',    1),  1)?></option>
+							<option <?php selected(get_option('cache-duration'),  120)?> value="120"><?php  printf(_n('%d hour',   '%d hours',    2),  2)?></option>
+							<option <?php selected(get_option('cache-duration'),  180)?> value="180"><?php  printf(_n('%d hour',   '%d hours',    3),  3)?></option>
+							<option <?php selected(get_option('cache-duration'), 1440)?> value="1440"><?php printf(_n('%d day',    '%d days',     1),  1)?></option>
 						</select>
 					</dd>
 				</dl>
