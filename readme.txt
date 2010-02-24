@@ -40,6 +40,9 @@ Nothing yet.
 
 == Changelog ==
 
+= 0.1.7 =
+* Adding a Changelog pannel to settings tabs
+
 = 0.1.6 =
 * Issue #3: Adding basic support for category filtering on galleries and favourites
 

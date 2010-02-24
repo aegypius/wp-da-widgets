@@ -19,7 +19,7 @@
 #da-widgets-settings pre { border-left: 4px solid #CCC; padding: 2px 2px 2px 3px; margin: 2px 2px 2px 15px;background-color: #ececec;}
 /* --- Tabs Management --- */
 #da-widgets-settings.tabs .tab {border: 1px solid #ccc; position: relative; z-index: 1}
-#da-widgets-settings.tabs div.tab {padding: 5px 15px; border-radius: 0px 0px 3px 3px; -moz-border-radius: 0px 3px 3px 3px; -webkit-border-radius: 0px 0px 3px 3px;}
+#da-widgets-settings.tabs div.tab {padding: 5px 15px; border-radius: 0px 3px 3px 3px; -moz-border-radius: 0px 3px 3px 3px; -webkit-border-radius: 0px 3px 3px 3px; display: none;}
 #da-widgets-settings.tabs li.tab {	position: relative; display: inline; border-bottom: none; padding: 5px 0 3px 0; margin: 0; background: #f9f9f9;border-radius: 3px 3px 0px 0px;-moz-border-radius: 3px 3px 0px 0px;-webkit-border-radius: 3px 3px 0px 0px;}
 #da-widgets-settings.tabs li.active { z-index: 2}
 #da-widgets-settings.tabs li.tab a { padding: 0px 10px; text-decoration: none;}
@@ -28,4 +28,7 @@
 #da-widgets-settings ul .message.warning {border-color: #f8c44f;background-color: #fee8b9;background-image: url(theme/error.png);}
 #da-widgets-settings ul .message.error {border-color: #f96764;background-color: #fcb2b5;background-image: url(theme/exclamation.png);}
 #da-widgets-settings ul .message q {font-style: italic}
+/* --- Changelog Panel --- */
+#da-widgets-settings #changelog ul {list-style: square; padding-left: 2em;}
+#da-widgets-settings #changelog a {text-decoration: none;}
 
