@@ -217,7 +217,7 @@ if (class_exists('WP_Widget')) {
 								if (is_file(ABSPATH . $thumbfile)) {
 									$body = str_replace(
 										$picture
-										, get_bloginfo('wpurl') . '/' . $thumbfile
+										, get_bloginfo('wpurl') . '/' . $thumbfile .'" width="' . get_option('thumb-size-x') .'px" height="' . get_option('thumb-size-y') . 'px'
 										, $body
 									);
 								}
