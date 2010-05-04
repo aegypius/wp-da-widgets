@@ -4,7 +4,7 @@ Plugin Name: deviantART widgets
 Plugin URI: http://github.com/aegypius/wp-da-widgets
 Description: This is a plugin which provide a widget to parse/display deviantART feeds
 Author: Nicolas "aegypius" LAURENT
-Version: 0.1.6
+Version: 0.2
 Author URI: http://www.aegypius.com
 */
 
@@ -20,7 +20,7 @@ if (class_exists('WP_Widget')) {
 	require_once PLUGIN_ROOT . '/libraries/DeviantArt/Favourite.php';
 
 	class DA_Widgets extends WP_Widget {
-		const VERSION               = '0.1.6';
+		const VERSION               = '0.2';
 		const DA_WIDGET_LOG         = 1;
 		const DA_WIDGET_GALLERY     = 2;
 		const DA_WIDGET_FAVOURITE   = 3;
@@ -279,11 +279,126 @@ if (class_exists('WP_Widget')) {
 				throw Exception('Log messages must be strings !');
 			error_log( strftime('%Y-%m-%d %H:%M:%S %Z') .' - '. rtrim($message, PHP_EOL) . PHP_EOL, 3, 'wp-content/cache' . DIRECTORY_SEPARATOR . 'da-widgets-' .strftime('%Y-%m-%d'). '.log');
 		}
+
+		public static function gallery($options, $content, $code) {
+			global $wpdb;
+			extract(shortcode_atts(array(
+				'deviant' => null,
+				'items' => 10,
+				'rating' => null,
+				'filter' => null,
+			), $options));
+
+			// if deviantID is null we look for existing 
+			// widgets and put them in the list
+			if (is_null($deviant)) {
+				$widgets_instances = $wpdb->get_var(
+					"SELECT option_value"
+					." FROM {$wpdb->options}"
+					." WHERE option_name='widget_da-widget'"
+					." LIMIT 1"
+				);
+
+				if (!is_null($widgets_instances)) {
+					$instances = unserialize($widgets_instances);
+					foreach ($instances as $instance) {
+						if (isset($instance['deviant']) && $instance['type'] == self::DA_WIDGET_GALLERY)
+							$deviants[] = $instance['deviant'];
+					}
+				}
+			} else {
+				$deviants = explode(',', $deviant);
+			}
+
+			$nav = array();
+			$slides = array();
+
+			foreach ($deviants as $d) {
+				switch ($code) {
+					case 'da_favourites' : 
+						$res = new DeviantArt_Favourite($d);
+						break;
+					default:
+						$res = new DeviantArt_Gallery($d);
+				}
+				$slides = $res->get($items, $rating, $filter, false);
+				foreach ($slides as &$slide) {
+					$nav[] = sprintf(
+						'<li><a title="%2$s" href="#%1$s">%2$s</a></li>'
+						, 'da-widgets-' .self::slugify($slide->title)
+						, $slide->title
+					);
+					$slide = sprintf(
+						'<li id="%1$s"><img src="%3$s" alt="%2$s" title="%2$s" /></li>'
+						, 'da-widgets-' . self::slugify($slide->title)
+						, $slide->title
+						, $slide->content
+					);
+				}
+			}
+
+			$gallery = sprintf(
+				'<div class="da-gallery">' .
+					'<ol class="nav">%s</ol>' .
+					'<ul class="slides">%s</ul>' .
+				'</div>'
+				, join(PHP_EOL, $nav)
+				, join(PHP_EOL, $slides)
+			);
+
+			return $gallery;
+		}
+
+		public static function gallery_css() {
+			$css = <<<CSS
+.da-gallery {position: relative; width: 470px; height: 480px; overflow: hidden;}
+.da-gallery .slides, .da-gallery .nav {list-style: none; margin: 0; padding: 0;}
+.da-gallery .slides li {position: absolute; top: 0; left: 0; z-index: 0; margin: 0;padding: 0}
+.da-gallery .slides li img {opacity: 0; filter: alpha(opacity=0)}
+.da-gallery .slides li:first-child,
+.da-gallery .slides li:target {z-index: 5}
+.da-gallery .slides li:first-child img,
+.da-gallery .slides li:target img {opacity: 1; filter: alpha(opacity=100)}
+.da-gallery .nav {bottom: 2px; left: 0px; position: absolute; z-index: 10; text-align: center; width: 100%;}
+.da-gallery .nav li {display: inline;margin: 0}
+.da-gallery .nav li a {margin: 2px; outline: none;display: inline-block; background: #fff; width: 30px; height: 30px; text-indent: -10000em; opacity: .3; border: 1px solid black;}
+.da-gallery .nav li a:active {opacity: .7}
+CSS;
+			printf('<style type="text/css">%s</style>', $css);
+		}
+
+		public static function slugify($text, $sep = '-') {
+			// replace non letter or digits by $sep
+			$text = preg_replace('/[^\\pL\d]+/u', $sep, $text);
+
+			// trim 
+			$text = trim($text, ' '.$sep);
+
+			// transliterate
+			if (function_exists('iconv')) {
+				$test = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
+			}
+
+			// lowercase
+			$text = strtolower($test);
+
+			// remove unwanted characters
+			$text = preg_replace('/[^' .$sep. '\w]+/', '', $text);
+
+			if (empty($text))
+				return "n{$sep}a";
+			return $text;
+		}
 	}
 
 	// Register Widget
 	add_action('widgets_init', create_function('', 'return register_widget("DA_Widgets");'));
 	add_action('wp_head',      array('DA_Widgets', 'css'));
+	add_action('wp_head',      array('DA_Widgets', 'gallery_css'));
+
+	// Register Shortcode
+	add_shortcode('da_gallery',    array('DA_Widgets', 'gallery'));
+	add_shortcode('da_favourites', array('DA_Widgets', 'gallery'));
 
 	// Setup I18n
 	load_plugin_textdomain('da-widgets', PLUGIN_ROOT, basename(dirname(__FILE__)));

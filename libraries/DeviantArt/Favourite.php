@@ -13,7 +13,7 @@ class DeviantArt_Favourite extends Feed {
 		parent::Feed();
 	}
 
-	public function get($count = -1, $rating = null, $filter = null) {
+	public function get($count = -1, $rating = null, $filter = null, $return = 'html') {
 		if ($count == 0 || !is_numeric($count)) $count = -1;
 
 		$url = sprintf(self::BACKEND_URL, $this->username)
@@ -42,20 +42,29 @@ class DeviantArt_Favourite extends Feed {
 			if ($media->text)
 				continue;
 
-			$items .= sprintf(
-				'<li><a href="%1$s" title="%2$s - %3$s"><img src="%4$s" alt="%2$s - %3$s"/></a></li>'
-				, $item->link
-				, $media->title
-				, $media->copyright
-				, $media->content->attributes()->url
-			);
+			if ($return == 'html') {
+				$items .= sprintf(
+					'<li><a href="%1$s" title="%2$s - %3$s"><img src="%4$s" alt="%2$s - %3$s"/></a></li>'
+					, $item->link
+					, $media->title
+					, $media->copyright
+					, $media->content->attributes()->url
+				);
+			} else {
+				$o            = new StdClass;
+				$o->link      = (string) $item->link;
+				$o->title     = (string) $media->title;
+				$o->copyright = (string) $media->copyright;
+				$o->content   = (string) $media->content->attributes()->url;
+				$items[]      = $o;
+			}
 
 			--$count;
 			if ($count > -1 && $count == 0)
 				break;
 		}
 
-		return sprintf('<ul class="da-widgets favourite">%s</ul>', $items);
+		return ($return == 'html' ? sprintf('<ul class="da-widgets favourite">%s</ul>', $items) : $items);
 	}
 
 	public function getCategories() {
