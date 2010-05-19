@@ -287,9 +287,26 @@ if (class_exists('WP_Widget')) {
 				'items' => 10,
 				'rating' => null,
 				'filter' => null,
+				'sitback' => false
 			), $options));
 
-			// if deviantID is null we look for existing 
+			if (intval($items) <= 0)
+				return '';
+
+			if ($sitback == 'flash' || $sitback == true) {
+				$gallery = sprintf(
+					'<object type="application/x-shockwave-flash" data="%1$s" class="da-gallery">'.
+						'<param name="movie" value="%1$s" />'.
+						'<param name="wmode" value="transparent" />'.
+						'<param name="quality" value="high" />'.
+						'<param name="allowFullScreen" value="true" />'.
+						'<param name="menu" value="false" />'.
+					'</object>'
+					,"http://st.deviantart.net/styles/swf/sitback.swf?v_0_9_3_76&amp;title=$deviant&amp;rssQuery=" .($code =='da_favourites' ? 'favby%3A' . $deviant : 'Gallery')
+				);
+				return $gallery;
+			}
+			// if deviantID is null we look for existing
 			// widgets and put them in the list
 			if (is_null($deviant)) {
 				$widgets_instances = $wpdb->get_var(
@@ -315,7 +332,7 @@ if (class_exists('WP_Widget')) {
 
 			foreach ($deviants as $d) {
 				switch ($code) {
-					case 'da_favourites' : 
+					case 'da_favourites' :
 						$res = new DeviantArt_Favourite($d);
 						break;
 					default:
@@ -371,7 +388,7 @@ CSS;
 			// replace non letter or digits by $sep
 			$text = preg_replace('/[^\\pL\d]+/u', $sep, $text);
 
-			// trim 
+			// trim
 			$text = trim($text, ' '.$sep);
 
 			// transliterate

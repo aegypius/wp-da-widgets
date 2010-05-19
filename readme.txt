@@ -42,6 +42,7 @@ Nothing yet.
 
 = 0.2 =
 * Added shortcodes to displays galleries / favourites within pages
+* Added basic support for deviantART sitback slideshow
 
 = 0.1.6 =
 * Issue #3: Adding basic support for category filtering on galleries and favourites
