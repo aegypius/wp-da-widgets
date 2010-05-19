@@ -302,7 +302,7 @@ if (class_exists('WP_Widget')) {
 						'<param name="allowFullScreen" value="true" />'.
 						'<param name="menu" value="false" />'.
 					'</object>'
-					,"http://st.deviantart.net/styles/swf/sitback.swf?v_0_9_3_76&amp;title=$deviant&amp;rssQuery=" .($code =='da_favourites' ? 'favby%3A' . $deviant : 'Gallery')
+					,"http://st.deviantart.net/styles/swf/sitback.swf?v_0_9_3_76&amp;title=$deviant&amp;rssQuery=" .($code =='da_favourites' ? 'favby%3A' : 'gallery%3A') . $deviant
 				);
 				return $gallery;
 			}
