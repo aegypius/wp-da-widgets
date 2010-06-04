@@ -1,0 +1,85 @@
+.da-gallery ul.thumbs,
+.da-gallery ul.thumbs li {
+	margin:0;
+	padding:0;
+	text-indent:0;
+	overflow:hidden;
+}
+.da-gallery li:before,
+.da-gallery li:before {
+	display:none;
+}
+.da-gallery li,.da-gallery img {
+	display: block; margin: 0 auto;
+}
+.da-gallery li {
+	display: inline-block;
+	width: 135px;
+	height: 135px;
+	text-align: center;
+	overflow:hidden;
+	border: 1px solid #ccc;
+	position: relative;
+	padding: 4px !important;
+	margin: 2px !important;
+	text-align: left; 
+	float: left;
+}
+
+/* Caption Banner ---------------------------------------- */
+.da-gallery .entry-title,
+.da-gallery .entry-meta {
+	position: absolute;
+	display: block;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	color: #7b6260;
+	background: #bbcbb9;
+	text-indent: 34px;
+	text-align: left;
+	font-family:'Trebuchet MS','Lucida Grande',Verdana,Arial,Sans-Serif;
+	height: 20px;
+	line-height: 20px;
+}
+.da-gallery .entry-title {
+	font-size: 16px;
+	font-weight: bold;
+	color: #2c3635;
+	bottom: 17px;
+	border-top: 1px solid #ccc;
+	box-shadow: 0 -10px 50px #000;
+	-o-box-shadow: 0 -10px 50px #000;
+	-moz-box-shadow: 0 -10px 50px #000;
+	-webkit-box-shadow: 0 -10px 50px #000;
+}
+.da-gallery .entry-meta   {
+	height:      17px;
+	line-height: 17px;
+}
+.da-gallery .entry-meta .avatar img {
+	position: absolute;
+	top:4px;
+	left:2px;
+	margin-top: -20px;
+	border:2px solid #fff;
+	width: 25px;
+	height: 25px;
+}
+.da-gallery .entry-meta a {
+	color: #2c3635;
+}
+.da-gallery .entry-title,
+.da-gallery .entry-meta ,
+.da-gallery .meta-sep,
+.da-gallery .meta-prep-entry-date,
+.da-gallery .entry-date {
+	display: none;
+}
+
+.da-gallery li:hover  .entry-title,
+.da-gallery li:hover .entry-meta  {
+	display: block;
+}
+
+.clear-fix {clear: both;}

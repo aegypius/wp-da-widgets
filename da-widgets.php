@@ -11,6 +11,7 @@ Author URI: http://www.aegypius.com
 if (class_exists('WP_Widget')) {
 
 	define('PLUGIN_ROOT', realpath(dirname(__FILE__)));
+	define('PLUGIN_URL' , substr(PLUGIN_ROOT, strpos(PLUGIN_ROOT, '/wp-content/')));
 
 	require_once PLUGIN_ROOT . '/includes/compat.php';
 	require_once PLUGIN_ROOT . '/libraries/Cache.php';
@@ -211,32 +212,7 @@ if (class_exists('WP_Widget')) {
 
 							foreach ($m[1] as $picture) {
 
-								$thumbfile = 'wp-content/cache' . DIRECTORY_SEPARATOR . 'da-widgets-' . sha1($picture) . '.' . $ext;
-
-								// TODO : Update this old image library
-								if (!file_exists(ABSPATH . $thumbfile)) {
-									$thumb = Image::CreateFromFile($picture);
-									Image::Resize($thumb
-										, get_option('thumb-size-x') * 2
-										, get_option('thumb-size-y') * 2
-									);
-
-									Image::Crop($thumb
-										, get_option('thumb-size-x')
-										, get_option('thumb-size-y')
-										, false
-										, false
-										, IMAGE_ALIGN_CENTER | IMAGE_ALIGN_CENTER
-									);
-
-									if (is_writeable(dirname(ABSPATH . $thumbfile))) {
-										Image::Output($thumb
-											, IMAGE_OUTPUTMODE_FILE
-											, get_option('thumb-format')
-											, ABSPATH . $thumbfile
-										);
-									}
-								}
+								$thumbfile = self::thumb($picture);
 
 								self::log("DEBUG[{$widget_id}] - > " . $picture . ' => ' . $thumbfile);
 
@@ -339,49 +315,61 @@ if (class_exists('WP_Widget')) {
 						$res = new DeviantArt_Gallery($d);
 				}
 				$slides = $res->get($items, $rating, $filter, false);
+
+				$thumb_size = 135;
+
 				foreach ($slides as &$slide) {
-					$nav[] = sprintf(
-						'<li><a title="%2$s" href="#%1$s">%2$s</a></li>'
-						, 'da-widgets-' .self::slugify($slide->title)
-						, $slide->title
-					);
-					$slide = sprintf(
-						'<li id="%1$s"><img src="%3$s" alt="%2$s" title="%2$s" /></li>'
-						, 'da-widgets-' . self::slugify($slide->title)
-						, $slide->title
+					$thumbs[] = sprintf(
+						'<li>'
+							.'<a title="%2$s" href="%1$s">'
+								.'<img class="thumb" src="%3$s" width="%4$spx" height="%5$spx" alt="Thumbnail for %2$s"/>'
+							.'</a>'
+							.'<div class="entry-title">%2$s</div>'
+							.'%6$s'
+							.'<br class="clear-fix" />'
+						.'</li>'
 						, $slide->content
+						, $slide->title
+						, get_bloginfo('wpurl') . '/' . self::thumb($slide->content, $thumb_size)
+						, $thumb_size //get_option('thumb-size-x')
+						, $thumb_size //get_option('thumb-size-y')
+
+						// Entry Metas
+						,sprintf(
+							'<div class="entry-meta">'
+								.'<span class="meta-prep meta-prep-author">%1$s%2$s</span>'
+								.'<span class="author vcard">'
+									.'<a class="url fn n" href="http://%3$s.deviantart.com" title="%4$s"><span class="avatar"><img src="%5$s" width="50px" height="50px" alt="%6$s"/></span>%3$s</a>'
+								.'</span>'
+								.'<span class="meta-sep"> - </span>'
+								.'<span class="meta-prep meta-prep-entry-date">%7$s</span>'
+								.'<span class="entry-date">'
+									.'<abbr class="published" title="%8$s">%9$s</abbr>'
+								.'</span>'
+							.'</div>'
+							, __('By ', 'da-widgets')
+							, $slide->symbol
+							, $slide->author
+							, sprintf(__("View %s's profile", 'da-widgets'), $slide->author)
+							, $slide->avatar
+							, sprintf(__("%s's avatar", 'da-widgets'), $slide->author)
+							, __('Published ', 'da-widgets')
+							, date('Y-m-d\TH:i:sO', $slide->published)
+							, date(get_option(date_format), $slide->published)
+						)
+
 					);
 				}
 			}
 
 			$gallery = sprintf(
 				'<div class="da-gallery">' .
-					'<ol class="nav">%s</ol>' .
-					'<ul class="slides">%s</ul>' .
+					'<ul class="thumbs">%1$s</ul>' .
 				'</div>'
-				, join(PHP_EOL, $nav)
-				, join(PHP_EOL, $slides)
+				, join(PHP_EOL, $thumbs)
 			);
 
 			return $gallery;
-		}
-
-		public static function gallery_css() {
-			$css = <<<CSS
-.da-gallery {position: relative; width: 470px; height: 480px; overflow: hidden;}
-.da-gallery .slides, .da-gallery .nav {list-style: none; margin: 0; padding: 0;}
-.da-gallery .slides li {position: absolute; top: 0; left: 0; z-index: 0; margin: 0;padding: 0}
-.da-gallery .slides li img {opacity: 0; filter: alpha(opacity=0)}
-.da-gallery .slides li:first-child,
-.da-gallery .slides li:target {z-index: 5}
-.da-gallery .slides li:first-child img,
-.da-gallery .slides li:target img {opacity: 1; filter: alpha(opacity=100)}
-.da-gallery .nav {bottom: 2px; left: 0px; position: absolute; z-index: 10; text-align: center; width: 100%;}
-.da-gallery .nav li {display: inline;margin: 0}
-.da-gallery .nav li a {margin: 2px; outline: none;display: inline-block; background: #fff; width: 30px; height: 30px; text-indent: -10000em; opacity: .3; border: 1px solid black;}
-.da-gallery .nav li a:active {opacity: .7}
-CSS;
-			printf('<style type="text/css">%s</style>', $css);
 		}
 
 		public static function slugify($text, $sep = '-') {
@@ -406,12 +394,60 @@ CSS;
 				return "n{$sep}a";
 			return $text;
 		}
+
+		public static function thumb($picture, $width=null, $height=null, $format=null) {
+			if (is_null($height)) $height = !is_null($width) ? $width : get_option('thumb-size-y');
+			if (is_null($width))  $width  = get_option('thumb-size-x');
+			if (is_null($format)) $format = get_option('thumb-format');
+
+			switch ($format) {
+				case IMG_PNG: $ext = 'png'; break;
+				case IMG_GIF: $ext = 'gif'; break;
+				case IMG_JPG: $ext = 'jpg'; break;
+			}
+
+			$thumbfile = 'wp-content/cache' . DIRECTORY_SEPARATOR . 'da-widgets-' . sha1($picture . $width . $height) . '.' . $ext;
+
+			// TODO : Update this old image library
+			if (!file_exists(ABSPATH . $thumbfile)) {
+				$thumb = Image::CreateFromFile($picture);
+				Image::Resize($thumb, $width * 2, $height == null ? null : $height * 2);
+
+				Image::Crop($thumb, $width, $height, false, false, IMAGE_ALIGN_CENTER | IMAGE_ALIGN_CENTER);
+
+				if (is_writeable(dirname(ABSPATH . $thumbfile))) {
+					Image::Output($thumb, IMAGE_OUTPUTMODE_FILE, $format, ABSPATH . $thumbfile);
+				} else {
+					return false;
+				}
+			}
+
+			return $thumbfile;
+		}
+
+		public static function scripts() {
+			wp_deregister_script('da-gallery');
+			wp_register_script('slimbox2',   PLUGIN_URL . '/public/js/slimbox2.min.js', array('jquery'), '2.04');
+			wp_register_script('da-gallery', PLUGIN_URL . '/public/js/gallery.min.js',  array('slimbox2'), self::VERSION);
+			wp_enqueue_script('da-gallery');
+		}
+
+		public static function styles() {
+			wp_deregister_style('da-widgets');
+			wp_register_style('slimbox2',   PLUGIN_URL . '/public/css/slimbox2.css', array(),'2.04');
+			wp_register_style('da-widgets', PLUGIN_URL . '/public/css/style.css', array('slimbox2'), self::VERSION);
+			wp_enqueue_style('da-widgets');
+		}
 	}
 
 	// Register Widget
 	add_action('widgets_init', create_function('', 'return register_widget("DA_Widgets");'));
 	add_action('wp_head',      array('DA_Widgets', 'css'));
-	add_action('wp_head',      array('DA_Widgets', 'gallery_css'));
+	#add_action('wp_head',      array('DA_Widgets', 'gallery_css'));
+
+	// Register Javascripts & Stylesheets
+	add_action('wp_print_scripts', array('DA_Widgets', 'scripts'));
+	add_action('wp_print_styles',  array('DA_Widgets', 'styles'));
 
 	// Register Shortcode
 	add_shortcode('da_gallery',    array('DA_Widgets', 'gallery'));
