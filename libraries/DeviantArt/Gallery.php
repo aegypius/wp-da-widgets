@@ -56,6 +56,10 @@ class DeviantArt_Gallery extends Feed {
 				$o->title     = (string) $media->title;
 				$o->copyright = (string) $media->copyright;
 				$o->content   = (string) $media->content->attributes()->url;
+				$o->author    = (string) $media->credit[0];
+				$o->symbol    = (string) substr($media->copyright, strpos($media->copyright, $o->author) -1, 1);
+				$o->avatar    = (string) $media->credit[1];
+				$o->published = strtotime($item->pubDate);
 				$items[]      = $o;
 			}
 
