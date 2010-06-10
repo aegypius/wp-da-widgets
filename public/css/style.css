@@ -42,6 +42,7 @@ object.da-gallery  { width: 450px; height: 450px;}
 	font-family:'Trebuchet MS','Lucida Grande',Verdana,Arial,Sans-Serif;
 	height: 20px;
 	line-height: 20px;
+	margin: 0 !important;
 }
 .da-gallery .entry-title {
 	font-size: 16px;
@@ -53,6 +54,7 @@ object.da-gallery  { width: 450px; height: 450px;}
 	-o-box-shadow: 0 -10px 50px #000;
 	-moz-box-shadow: 0 -10px 50px #000;
 	-webkit-box-shadow: 0 -10px 50px #000;
+	font-size: 16px !important;
 }
 .da-gallery .entry-meta   {
 	height:      17px;
