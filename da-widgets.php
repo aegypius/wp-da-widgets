@@ -270,6 +270,17 @@ if (class_exists('WP_Widget')) {
 				return '';
 
 			if ($sitback == 'flash' || $sitback == true) {
+
+				$options = array(
+					'title'               =>  $deviant . ($code =='da_favourites' ? "'s favourites" : "'s gallery") ,
+					'rssQuery'            => ($code =='da_favourites' ? 'favby:' : 'gallery:') . $deviant,
+					'resizableControls'   => 'true',
+					'floatableControls'   => 'false',
+					'disableTitleBar'     => 'false',
+					'forceTitleBarWhenFS' => 'true',
+					'autoPlay'            => 'true',
+				);
+
 				$gallery = sprintf(
 					'<object type="application/x-shockwave-flash" data="%1$s" class="da-gallery">'.
 						'<param name="movie" value="%1$s" />'.
@@ -278,7 +289,7 @@ if (class_exists('WP_Widget')) {
 						'<param name="allowFullScreen" value="true" />'.
 						'<param name="menu" value="false" />'.
 					'</object>'
-					,"http://st.deviantart.net/styles/swf/sitback.swf?v_0_9_3_76&amp;title=$deviant&amp;rssQuery=" .($code =='da_favourites' ? 'favby%3A' : 'gallery%3A') . $deviant
+					,"http://st.deviantart.net/styles/swf/sitback.swf?v_0_9_3_76" . http_build_query($options)
 				);
 				return $gallery;
 			}
