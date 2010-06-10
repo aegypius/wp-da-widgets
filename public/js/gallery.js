@@ -5,7 +5,7 @@
 			// Slimbox bindings
 			var thumbs = $('a:has(img.thumb)', this);
 			if (thumbs.length) {
-				thumbs.slimbox({counterText: 'Deviation {x} of {y}'});
+				thumbs.slimbox({counterText: 'Deviation {x} of {y}', loop: true});
 			}
 		});
 
