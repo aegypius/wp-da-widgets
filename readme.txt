@@ -43,6 +43,8 @@ Nothing yet.
 = 0.2 =
 * Added shortcodes to displays galleries / favourites within pages
 * Added basic support for deviantART sitback slideshow
+* Added a tab on widget settings to show help about shortcodes usage
+* Cleaning main code, conditional inclusion of the javascript/css files
 
 = 0.1.7 =
 * Adding a Changelog pannel to settings tabs
