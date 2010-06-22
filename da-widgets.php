@@ -132,8 +132,6 @@ if (class_exists('WP_Widget')) {
 
 					if (in_array($type, array(self::DA_WIDGET_GALLERY, self::DA_WIDGET_FAVOURITE)) && get_option('thumb-enabled')) {
 
-						self::log("DEBUG[{$widget_id}] - Generating thumbnails");
-
 						// Creating Thumbnail cache
 						if (preg_match_all('/\t?\ssrc="([^"]*\.(?:jpg|gif|png))"/x', $body, $m)) {
 
@@ -145,18 +143,18 @@ if (class_exists('WP_Widget')) {
 
 							foreach ($m[1] as $picture) {
 
-								$thumbfile = self::thumb($picture);
-
-								self::log("DEBUG[{$widget_id}] - > " . $picture . ' => ' . $thumbfile);
-
-								if (is_file(ABSPATH . $thumbfile)) {
-									$body = str_replace(
-										$picture
-										, get_bloginfo('wpurl') . '/' . $thumbfile .'" width="' . get_option('thumb-size-x') .'px" height="' . get_option('thumb-size-y') . 'px'
-										, $body
-									);
-								}
-
+								$body = str_replace(
+									$picture
+									, sprintf(
+										'%1$s/public/thumb.php?u=%2$s&w=%3$s&h=%4$s&f=%5$s" width="%3$spx" height="%4$spx'
+										, get_bloginfo('wpurl') . PLUGIN_URL
+										, $picture
+										, get_option('thumb-size-x')
+										, get_option('thumb-size-y')
+										, get_option('thumb-format')
+									)
+									, $body
+								);
 							}
 						}
 					}
@@ -165,9 +163,7 @@ if (class_exists('WP_Widget')) {
 
 					self::log("DEBUG[{$widget_id}] - Output content : {$body}");
 
-					if ($cache) {
-						$cache->end();
-					}
+					if ($cache) { $cache->end(array('DA_Widgets', 'cache_callback')); }
 				}
 				echo $after_widget;
 
@@ -178,6 +174,28 @@ if (class_exists('WP_Widget')) {
 
 			self::log(str_pad(" END {$widget_id} ", 72 , '-', STR_PAD_BOTH));
 
+		}
+
+		public static function cache_callback($buffer) {
+			// Extracting parameters to generate thumb's filename
+			if (preg_match_all('/src="([^"]+)"/xs', $buffer, $matches)) {
+				foreach ($matches[1] as $url) {
+					parse_str(parse_url($url, PHP_URL_QUERY), $args);
+
+					if (empty($args['u']) || !$args['w'] || !$args['h'] || !$args['f'])
+						continue;
+
+					switch ($args['f']) {
+						case IMG_PNG: $ext = 'png'; break;
+						case IMG_GIF: $ext = 'gif'; break;
+						case IMG_JPG: $ext = 'jpg'; break;
+					}
+
+					$thumbfile =  get_bloginfo('wpurl') . '/wp-content/cache' . DIRECTORY_SEPARATOR . 'da-widgets-' . sha1($args['u'] . $args['w'] . $args['h']) . '.' . $ext;
+					$buffer = str_replace($url, $thumbfile, $buffer);
+				}
+			}
+			return $buffer;
 		}
 
 		public static function log($message) {
