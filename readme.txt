@@ -3,7 +3,7 @@ Contributors: aegypius
 Tags: widget, gallery, image
 Donate link: http://github.com/aegypius/wp-da-widgets
 Requires at least: 2.8.0
-Tested up to: 2.9.2
+Tested up to: 3.0
 Stable tag: 0.2
 
 Displays deviantART feeds as wordpress widgets
