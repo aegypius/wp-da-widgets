@@ -25,7 +25,11 @@ if (class_exists('WP_Widget')) {
 		const DA_WIDGET_LOG         = 1;
 		const DA_WIDGET_GALLERY     = 2;
 		const DA_WIDGET_FAVOURITE   = 3;
+
 		static $log_level           = 1;
+
+		static $shortcode_enabled   = false;
+		static $shortcodes          = array('da_gallery', 'da_favourites');
 
 		function DA_Widgets() {
 			self::$log_level = get_option('debug-enabled');
@@ -185,7 +189,7 @@ if (class_exists('WP_Widget')) {
 			error_log( strftime('%Y-%m-%d %H:%M:%S %Z') .' - '. rtrim($message, PHP_EOL) . PHP_EOL, 3, 'wp-content/cache' . DIRECTORY_SEPARATOR . 'da-widgets-' .strftime('%Y-%m-%d'). '.log');
 		}
 
-		public static function gallery($options, $content, $code) {
+		public static function shortcodes($options, $content, $code) {
 			global $wpdb;
 			extract(shortcode_atts(array(
 				'deviant' => null,
@@ -366,24 +370,37 @@ if (class_exists('WP_Widget')) {
 		}
 
 		public static function scripts() {
-			wp_deregister_script('da-gallery');
-			wp_register_script('slimbox2',   PLUGIN_URL . '/public/js/slimbox2.min.js', array('jquery'), '2.04');
-			wp_register_script('da-gallery', PLUGIN_URL . '/public/js/gallery.min.js',  array('slimbox2'), self::VERSION);
-			wp_enqueue_script('da-gallery');
+			if (self::$shortcode_enabled) {
+				wp_deregister_script('da-gallery');
+				wp_register_script('slimbox2',   PLUGIN_URL . '/public/js/slimbox2.min.js', array('jquery'), '2.04');
+				wp_register_script('da-gallery', PLUGIN_URL . '/public/js/gallery.min.js',  array('slimbox2'), self::VERSION);
+				wp_enqueue_script('da-gallery');
+			}
 		}
 
 		public static function styles() {
 			wp_deregister_style('da-widgets');
-			wp_register_style('slimbox2',   PLUGIN_URL . '/public/css/slimbox2.css', array(),'2.04');
-			wp_register_style('da-widgets', PLUGIN_URL . '/public/css/style.css', array('slimbox2'), self::VERSION);
+			if (self::$shortcode_enabled) {
+				wp_register_style('slimbox2',   PLUGIN_URL . '/public/css/slimbox2.css', array(),'2.04');
+				wp_register_style('da-widgets', PLUGIN_URL . '/public/css/style.css', array('slimbox2'), self::VERSION);
+			} else {
+				wp_register_style('da-widgets', PLUGIN_URL . '/public/css/style.css', array(), self::VERSION);
+			}
 			wp_enqueue_style('da-widgets');
 		}
 	
 		public static function shortcode_dependencies($posts) {
-			if (empty($posts)) return $posts;
+			if (empty($posts) || self::$shortcode_enabled) return $posts;
 			$found = false;
 			foreach ($posts as $post) {
-					
+				if (preg_match_all('/\[([^\]]+)\]/ms', $post->post_content, $matches)) {
+					foreach ($matches[1] as $sc) {
+						if (in_array(array_shift(explode(' ', $sc)), self::$shortcodes)) {
+							self::$shortcode_enabled = true;
+							return $posts;
+						}
+					}
+				}
 			}
 			return $posts;
 		}
@@ -398,9 +415,9 @@ if (class_exists('WP_Widget')) {
 	add_action('wp_print_scripts', array('DA_Widgets', 'scripts'));
 	add_action('wp_print_styles',  array('DA_Widgets', 'styles'));
 
-	// Register Shortcode
-	add_shortcode('da_gallery',    array('DA_Widgets', 'gallery'));
-	add_shortcode('da_favourites', array('DA_Widgets', 'gallery'));
+	// Register Shortcodes
+	foreach (DA_Widgets::$shortcodes as $sc)
+		add_shortcode($sc,    array('DA_Widgets', 'shortcodes'));
 
 	// Setup I18n
 	load_plugin_textdomain('da-widgets', PLUGIN_ROOT, basename(dirname(__FILE__)));
