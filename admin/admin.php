@@ -143,6 +143,7 @@ function da_widgets_admin_page() {
 		<li class="tab"><a href="#general"><?php _e('General', 'da-widgets')?></a></li>
 		<li class="tab"><a href="#customization"><?php _e('Customization', 'da-widgets')?></a></li>
 		<li class="tab"><a href="#help"><?php _e('Help', 'da-widgets')?></a></li>
+		<li class="tab"><a href="#changelog"><?php _e('Changelog', 'da-widgets')?></a></li>
 	</ul>
 
 	<form action="options.php" method="post">
@@ -291,6 +292,44 @@ function da_widgets_admin_page() {
 					<li>- <kbd>sitback</kbd> : <?_e('if set include deviantArt\'s sitback within the page', 'da-widgets')?></li>
 				</ul>
 			</p>
+		</div>
+
+		<div id="changelog" class="tab">
+<?php
+	// Loading readme file to display changes
+	$readme = file_get_contents(dirname(__FILE__) . '/../readme.txt');
+	$readme = substr($readme, strpos($readme, '== Changelog'));
+	$notes = array();
+	foreach (explode("\n", $readme) as $num => $line) {
+		if ($num == 0 || strlen(trim($line)) == 0)
+			continue;
+
+		if (preg_match('/=\s*(?<version>[0-9\.]+)\s*=/', $line, $m)) {
+			if (!empty($notes)) printf('<ul>%s</ul>', implode('', $notes));
+			printf('<h3>Version %s</h3>', $m['version']);
+			$notes = array();
+			continue;
+		}
+
+		if (preg_match('/^\*(?<note>.*)/', $line, $m))
+			$line = sprintf('<li>%s</li>', trim($m['note']));
+
+		if (preg_match_all('/(?<label>issues?\s+#(?<id>\d+))/mi', $line, $m)) {
+			array_shift($m);
+			$line = str_replace(
+				$m['label'][0],
+				sprintf(
+					'<a href="http://github.com/aegypius/wp-da-widgets/issues/issue/%1$s" title="%2$s on github.com" target="_blank">%2$s</a>',
+					$m['id'][0],
+					$m['label'][0]
+				)
+			, $line);
+		}
+
+		$notes[] = $line;
+	}
+	if (!empty($notes)) printf('<ul>%s</ul>', implode('', $notes));
+?>
 		</div>
 	</form>
 </div>
