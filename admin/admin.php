@@ -142,6 +142,7 @@ function da_widgets_admin_page() {
 	<ul>
 		<li class="tab"><a href="#general"><?php _e('General', 'da-widgets')?></a></li>
 		<li class="tab"><a href="#customization"><?php _e('Customization', 'da-widgets')?></a></li>
+		<li class="tab"><a href="#help"><?php _e('Help', 'da-widgets')?></a></li>
 	</ul>
 
 	<form action="options.php" method="post">
@@ -273,6 +274,24 @@ function da_widgets_admin_page() {
 			</fieldset>
 		</div>
 
+		<div id="help" class="tab">
+			<h3><?_e('Shortcodes usage', 'da-widgets')?></h3>
+			<p><?_e('deviantART Widgets now supports shortcodes to display galleries, favourites within your posts or pages', 'da-widgets')?></p>
+			<p><?_e('Two shortcodes are available :', 'da-widgets')?>
+				<ul>
+					<li>- <kbd>da_gallery</kbd> <?_e('to display galleries', 'da-widgets')?></li>
+					<li>- <kbd>da_favourites</kbd> <?_e('to display favourites', 'da-widgets')?></li>
+				</ul>
+			</p>
+			<p><?_e('For these shortcode, you may use these options : ', 'da-widgets')?>
+				<ul>
+					<li>- <kbd>deviant</kbd> : <?_e('deviantId or list of deviantIds to display (coma separated)', 'da-widgets')?></li>
+					<li>- <kbd>items</kbd>   : <?_e('number of items to display (default: 10)', 'da-widgets')?></li>
+					<li>- <kbd>rating</kbd>  : <?_e('if "nonadult" is set filters deviations based on this rating', 'da-widgets')?></li>
+					<li>- <kbd>sitback</kbd> : <?_e('if set include deviantArt\'s sitback within the page', 'da-widgets')?></li>
+				</ul>
+			</p>
+		</div>
 	</form>
 </div>
 <?
