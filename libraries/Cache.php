@@ -26,11 +26,12 @@ class Cache {
 		return true;
 	}
 
-	public function end() {
+	public function end($callback = null) {
 		if (is_writeable(dirname($this->fragment))) {
 			$src = ob_get_clean();
+			$buffer = (!is_null($callback) && is_callable($callback) ? call_user_func_array($callback, array($src)) : $src);
 			$fp = gzopen($this->fragment, 'w9');
-			gzwrite($fp, $src, strlen($src));
+			gzwrite($fp, $buffer, strlen($buffer));
 			gzclose($fp);
 		}
 		echo $src;
