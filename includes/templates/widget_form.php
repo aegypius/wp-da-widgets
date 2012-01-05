@@ -6,9 +6,9 @@
 	<p>
 		<label for="<?php echo $this->get_field_id('type')?>"><?php _e('Content', 'da-widgets')?> : </label>
 		<select class="widefat" id="<?php echo $this->get_field_id('type')?>" name="<?php echo $this->get_field_name('type')?>">
-			<option <?php selected(self::DA_WIDGET_LOG, $type); ?> value="<?php echo self::DA_WIDGET_LOG?>"><? _e('Journal', 'da-widgets')?></option>
-			<option <?php selected(self::DA_WIDGET_GALLERY, $type); ?> value="<?php echo self::DA_WIDGET_GALLERY?>"><? _e('Gallery', 'da-widgets')?></option>
-			<option <?php selected(self::DA_WIDGET_FAVOURITE, $type); ?> value="<?php echo self::DA_WIDGET_FAVOURITE?>"><? _e('Favourites', 'da-widgets')?></option>
+			<option <?php selected(self::DA_WIDGET_LOG, $type); ?> value="<?php echo self::DA_WIDGET_LOG?>"><?php _e('Journal', 'da-widgets')?></option>
+			<option <?php selected(self::DA_WIDGET_GALLERY, $type); ?> value="<?php echo self::DA_WIDGET_GALLERY?>"><?php _e('Gallery', 'da-widgets')?></option>
+			<option <?php selected(self::DA_WIDGET_FAVOURITE, $type); ?> value="<?php echo self::DA_WIDGET_FAVOURITE?>"><?php _e('Favourites', 'da-widgets')?></option>
 		</select>
 	</p>
 
