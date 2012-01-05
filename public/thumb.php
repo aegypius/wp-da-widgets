@@ -2,6 +2,9 @@
 require_once '../libraries/Image.php';
 defined('ABSPATH') or define('ABSPATH', realpath(dirname(__FILE__) . '/../../../..'));
 
+if (defined('E_STRICT'))
+	error_reporting(0);
+
 /*
 	Generates Thumbnail and redirect
 */
@@ -37,5 +40,9 @@ if (!file_exists(ABSPATH . $thumbfile)) {
 	}
 }
 
+$root_dir = '';
+if (strpos($_SERVER['REQUEST_URI'], '/wp-content') !== 0) {
+	$root_dir = substr($_SERVER['REQUEST_URI'], 0, strpos($_SERVER['REQUEST_URI'], '/wp-content'));
+}
 header('HTTP/1.1 301 Moved Permanently');
-header('Location: '.$thumbfile);
+header('Location: '. $root_dir . $thumbfile);
