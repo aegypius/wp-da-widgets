@@ -443,7 +443,7 @@ class Image
 		{
 			case IMAGE_OUTPUTMODE_BASE64 :
 				ob_start();
-					imagepng(&$imgResource);
+					imagepng($imgResource);
 					$strImage= ob_get_contents();
 				ob_end_clean();
 				return sprintf("data:image/png;base64,%s",base64_encode($strImage));
