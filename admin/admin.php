@@ -81,6 +81,8 @@ function da_widgets_admin_clean_cache($input) {
 // Checks setup requirement
 function da_widgets_admin_check() {
 
+	$failure = 0;
+
 	// Checking GD availability
 	if (!function_exists('gd_info'))
 		$failure |= 1;

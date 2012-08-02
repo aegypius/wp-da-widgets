@@ -91,8 +91,8 @@ if (class_exists('WP_Widget')) {
 				$type    = esc_attr($instance['type']);
 				$deviant = esc_attr($instance['deviant']);
 				$items   = intval($instance['items']);
-				$rating  = esc_attr($instance['rating']);
-				$html    = intval($instance['html']);
+				$rating  = isset($instance['rating']) ? esc_attr($instance['rating']) : 'all';
+				$html    = isset($instance['html']) ? intval($instance['html']) : 0;
 				$filter  = intval($instance['filter']);
 
 				self::log("DEBUG[{$widget_id}] - Cache is "       . (get_option('cache-enabled') ? 'enabled' : 'disabled') . " (duration : " . get_option('cache-duration') . ")");

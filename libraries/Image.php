@@ -169,11 +169,11 @@ class Image
 				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 				$content = curl_exec($ch);
 				curl_close($ch);
-				return @ImageCreateFromString($content);
+				return ImageCreateFromString($content);
 			}
 		}
 
-		list($width, $height, $type, $attr) = @getimagesize($imgFile);
+		list(, , $type) = @getimagesize($imgFile);
 		switch($type)
 		{
 			case 1 :

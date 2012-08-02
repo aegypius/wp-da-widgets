@@ -7,7 +7,7 @@ class DeviantArt_Gallery extends Feed {
 	protected $rating;
 	protected $username;
 
-	public function DeviantArt_Gallery($username) {
+	public function DeviantArt_Gallery($username, $rating = null) {
 		$this->username = trim($username);
 		$this->rating = $rating;
 		parent::Feed();
