@@ -33,7 +33,7 @@ if (!file_exists(ABSPATH . $thumbfile)) {
 	if (is_writeable(dirname(ABSPATH . $thumbfile))) {
 		Image::Output($thumb, IMAGE_OUTPUTMODE_FILE, $format, ABSPATH . $thumbfile);
 	} else {
-		return;
+		throw new Exception(dirname(ABSPATH . $thumbfile) . ' is not writeable');
 	}
 }
 
