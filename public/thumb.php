@@ -2,6 +2,10 @@
 require_once '../libraries/Image.php';
 defined('ABSPATH') or define('ABSPATH', realpath(dirname(__FILE__) . '/../../../..'));
 
+if (defined('E_STRICT')) {
+	error_reporting(error_reporting() ^ E_STRICT);
+}
+
 /*
 	Generates Thumbnail and redirect
 */
@@ -13,6 +17,7 @@ $format  = intval($_GET['f']);
 
 if (empty($picture) || !$width || !$height || !$format) {
 	header('HTTP/1.1 404 Not Found');
+	echo "404 Not Found";
 	return;
 }
 
