@@ -173,19 +173,19 @@ class Image
 			}
 		}
 
-		list(, , $type) = @getimagesize($imgFile);
+		list(, , $type) = getimagesize($imgFile);
 		switch($type)
 		{
 			case 1 :
-				return @ImageCreateFromGIF($imgFile);
+				return ImageCreateFromGIF($imgFile);
 				exit;
 				break;
 			case 2 :
-				return @ImageCreateFromJPEG($imgFile);
+				return imagecreatefromjpeg($imgFile);
 				exit;
 				break;
 			case 3 :
-				return @ImageCreateFromPNG($imgFile);
+				return ImageCreateFromPNG($imgFile);
 				exit;
 				break;
 			default :
@@ -452,11 +452,11 @@ class Image
 				if(!is_null($sFileName))
 				{
 					if($imgFormat == IMAGE_OUTPUT_PNG)
-						@imagepng($imgResource,$sFileName);
+						imagepng($imgResource,$sFileName);
 					else if($imgFormat == IMAGE_OUTPUT_GIF)
-						@imagegif($imgResource,$sFileName);
+						imagegif($imgResource,$sFileName);
 					else if($imgFormat == IMAGE_OUTPUT_JPG)
-						@imagejpeg($imgResource,$sFileName);
+						imagejpeg($imgResource,$sFileName);
 					return true;
 				}
 				else

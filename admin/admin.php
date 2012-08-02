@@ -34,11 +34,10 @@ function da_widgets_admin_head() {
 }
 
 function da_widgets_admin_menu() {
-	add_submenu_page(
-		'plugins.php',								// parent
+	add_plugins_page(
 		__( 'deviantART Widgets', 'da-widgets' ),	// page_title
 		__( 'deviantART Widgets', 'da-widgets' ),	// menu_title
-		8,											// capability required
+		'update_plugins',							// capability required
 		DA_WIDGETS_ADMIN_PAGE,						// file/handle
 		'da_widgets_admin_page'						// function
 	);

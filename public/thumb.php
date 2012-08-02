@@ -2,7 +2,7 @@
 require_once '../libraries/Image.php';
 defined('ABSPATH') or define('ABSPATH', realpath(dirname(__FILE__) . '/../../../..'));
 
-if (defined('E_STRICT')) {
+if (defined(E_STRICT)) {
 	error_reporting(error_reporting() ^ E_STRICT);
 }
 

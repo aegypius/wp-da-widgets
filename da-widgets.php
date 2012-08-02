@@ -102,6 +102,7 @@ if (class_exists('WP_Widget')) {
 				echo $before_widget;
 				echo $before_title . $title . $after_title;
 
+				$cache = false;
 				if (get_option('cache-enabled')) {
 					$fragment = 'wp-content/cache' . DIRECTORY_SEPARATOR . 'da-widgets-' . sha1(serialize($instance)) . '.html.gz';
 					$duration = sprintf('+%d minutes', get_option('cache-duration'));
@@ -317,7 +318,7 @@ if (class_exists('WP_Widget')) {
 							, sprintf(__("%s's avatar", 'da-widgets'), $slide->author)
 							, __('Published ', 'da-widgets')
 							, date('Y-m-d\TH:i:sO', $slide->published)
-							, date(get_option(date_format), $slide->published)
+							, date(get_option('date_format'), $slide->published)
 						)
 
 					);
@@ -406,7 +407,7 @@ if (class_exists('WP_Widget')) {
 			}
 			wp_enqueue_style('da-widgets');
 		}
-	
+
 		public static function shortcode_dependencies($posts) {
 			if (empty($posts) || self::$shortcode_enabled) return $posts;
 			$found = false;
